@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <title>Babylon - Basic scene</title>
+   <style>
+      html, body {
+         overflow: hidden;
+         background-color: black; 
+         width: 100%;
+         height: 100%;
+         margin: 0;
+         padding: 0;
+      }
+      #renderCanvas {
+         width: 100%;
+         height: 100%;
+         touch-action: none;
+      }
+        .dropbtn {
+            background-color: black;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #3e8e41;
+        }
+        #myInput {
+            background-image: url('searchicon.png');
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff00;
+            min-width: 230px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {background-color: #ddd}
+
+        .show {display:block;}
+
+   </style>
+   <script src="js/babylon.js"></script>
+   <script src="js/hand.js"></script>
+   <script src="js/constellationsTools.js"></script>
+   <script src="d/hyg.js"></script>
+   <script src="d/fol_the_path.js"></script>
+
+ <script type="text/javascript">
+
+
+var _scene = null;
+var getCurrentScene  = function() {
+
+      if (_scene != null) return _scene;
+
+      var canvas = document.querySelector("#renderCanvas");
+      var engine = new BABYLON.Engine(canvas, true);
+      scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color3(0, 0, 0);
+          
+//           scene.debugLayer.show();     
+
+
+      var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
+     // camera.attachControl(canvas);  
+      //  camera.noRotationConstraint=true;
+        scene.activeCamera = camera;
+       
+      engine.runRenderLoop(function () {
+         scene.render();
+      });
+
+      window.addEventListener("resize", function () {
+         engine.resize();
+      });
+     
+        window.addEventListener("click", function () {
+                var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+                console.log(pickResult.pickedMesh.name);
+});
+
+        _scene = scene;        
+        return scene;
+
+}
+var drawStarsFromADataSet = function(scene, data){
+    drawStarsFromADataSet(scene,data, null);    
+}
+var drawStarsFromADataSet = function(scene, data,filter){
+
+    for (var p = 1; p < data.data.length; p++){                     
+       if(filter != null && filter.indexOf(data.data[p][h_con]) == -1)continue;    
+       createAStars(data.data[p],scene);
+    }
+}
+
+var drawConstellations = function(scene,data){
+        drawConstellations(scene,data,null);
+}
+var drawConstellations = function(scene,data,filter){
+        for (var p = 0; p < fo_t_path.length; p++)
+        {
+                var aConstell = fo_t_path[p];
+
+                if(filter != null && filter.indexOf(aConstell[0]) == -1 )continue;    
+
+                for (var i = 3; i < aConstell.length; i++) // 3 because, the 2 first is the name and the shortname
+                {
+                   var from = findAStars(aConstell[i-1],data);
+                   var to = findAStars(aConstell[i],data);
+                   drawAConstellationConnexion(from,to,scene); 
+                }
+        }
+}
+
+var constructMenu = function()
+{      
+        document.getElementById("buttonview").addEventListener("click", function() {myF("viewDrop");}, false);
+        document.getElementById("buttonselect").addEventListener("click", function() {myF("selectDrop");}, false);
+        document.getElementById("myInputview").addEventListener("keyup", function() {filterFunction('viewDrop','myInputview');});
+        document.getElementById("myInputselect").addEventListener("keyup", function() {filterFunction('selectDrop','myInputselect');});
+
+        cst = [];
+        for(var i = 0;i < fo_t_path.length; i++)
+        {
+                cst.push([fo_t_path[i][0],fo_t_path[i][1]]);
+        }
+        var uniq_cst  = unique(cst);
+        uniq_cst = uniq_cst.sort();
+
+//            <input type="checkbox" name="all" value=All class="dropdown-content">All<br>
+        var mydropdwn = document.getElementById("selectDrop");
+        var divelem = document.createElement("div");
+        mydropdwn.appendChild(divelem);               
+        var inputelem = document.createElement("input");
+        inputelem.setAttribute("type","checkbox");
+        inputelem.setAttribute("value","All");
+        divelem.appendChild(inputelem);
+        var txtelem = document.createTextNode("All");
+        divelem.appendChild(txtelem);
+        divelem.className = "dropbtn";
+
+//    <input type="checkbox" name="none" value="None" class="dropdown-content">None<br>
+        var divelem = document.createElement("div");
+        mydropdwn.appendChild(divelem);               
+        var inputelem = document.createElement("input");
+        inputelem.setAttribute("type","checkbox");
+        inputelem.setAttribute("value","None");
+        divelem.appendChild(inputelem);
+        var txtelem = document.createTextNode("None");
+        divelem.appendChild(txtelem);
+        divelem.className = "dropbtn";
+
+
+        for(var i = 0;i < uniq_cst.length; i++)
+        {
+                var divelem = document.createElement("div");
+                mydropdwn.appendChild(divelem);               
+                var inputelem = document.createElement("input");
+                inputelem.setAttribute("type","checkbox");
+                inputelem.setAttribute("value",uniq_cst[i][0]);
+                divelem.appendChild(inputelem);
+                var txtelem = document.createTextNode(uniq_cst[i][1]);
+                divelem.appendChild(txtelem);
+                divelem.className = "dropbtn";
+
+                divelem.appendChild(document.createElement("br"));
+        }
+
+        var mydropdwn = document.getElementById("viewDrop");
+        for(var i = 0;i < uniq_cst.length; i++)
+        {
+                var divelem = document.createElement("div");
+                mydropdwn.appendChild(divelem);           
+                        
+                // <button id="buttonview" class="dropbtn">View</button>
+                var btelem = document.createElement("button");
+                btelem.type = "button";
+                btelem.className = "dropbtn";
+                btelem.textContent = uniq_cst[i][1];
+                btelem.onclick = function(j) { return function() { cameraOn(j); }; }(uniq_cst[i][0]);
+
+                
+                divelem.appendChild(btelem);
+                divelem.appendChild(document.createElement("br"));
+        }
+}
+
+   function myF(mId) {
+            document.getElementById(mId).classList.toggle("show");
+        }
+   
+   function filterFunction(idm,inputid) {
+            var input = document.getElementById(inputid);
+            var filter = input.value.toUpperCase();
+
+            var div = document.getElementById(idm);
+            var a = div.getElementsByTagName("div");
+            for (var i = 0; i < a.length; i++) {
+                if (a[i].textContent.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+
+
+var cameraOn=function(cstname)
+        {
+                stars = cst_hyg_data["data"].filter(function(val) { return val[h_con] ==cstname;});
+                var x=0,y=0,z=0;        
+                for(var i = 0; i < stars.length; i++)
+                {       
+                        x+= stars[i][h_x_rel];
+                        y+= stars[i][h_y_rel];
+                        z+= stars[i][h_z_rel];
+                }
+                x=x/stars.length;
+                y= y/stars.length;
+                z= z/stars.length;
+//                console.log("camera target is now :"+cstname+"(x:"+x+";y:"+y+";z:"+y+";)");
+//                console.log(getCurrentScene().activeCamera);
+                getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(x,y,z));
+       }
+
+//https://www.babylonjs.com/demos/lens/
+var init = function() {
+
+       constructConstData();
+       constructMenu();
+       computeDistanceAndFarestStars(cst_hyg_data); // find the bigest value between x,y,z. 
+       computeDistanceAndFarestStars(all_hyg_data); // find the bigest value between x,y,z. 
+
+//       addRelativityDist(cst_hyg_data); // Only need once. 
+
+       addRelativityDist(all_hyg_data);
+
+       var scene = getCurrentScene();
+       drawStarsFromADataSet(scene,cst_hyg_data);
+       drawConstellations(scene,cst_hyg_data);
+//       drawStarsFromADataSet(scene,all_hyg_data,["UMa"]);
+}
+
+</script>
+</head>
+<body onload="init()">
+
+<button id="buttonview" class="dropbtn">View</button>
+  <div id="viewDrop" class="dropdown-content" style="overflow-y: scroll">
+    <input type="text" placeholder="Search.." id="myInputview"><br>
+  </div>
+
+
+<button id="buttonselect"  class="dropbtn">Select</button>
+  <div id="selectDrop" class="dropdown-content" style="overflow-y: scroll">
+    <input type="text" placeholder="Search.." id="myInputselect"><br>
+  </div>
+
+
+<canvas id="renderCanvas"></canvas>
+
+</body>
+</html>
+
+
