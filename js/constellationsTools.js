@@ -51,18 +51,24 @@ var cst_hyg_data = {
                         middle_stars : 0,
                         data : []};
 /**************************************************************************/
-constructConstData = function(){
+var getNumberOfStars = function(cstname,starsE){
+        var e = selectConstellationsStars(cstname,starsE)
+        return e.length;
 
-for (var p = 0; p < fo_t_path.length; p++)
-        {
-                var aStar = fo_t_path[p];
-                for (var i = 2; i < aStar.length; i++)
+
+}
+/**************************************************************************/
+var constructConstData = function(){
+        for (var p = 0; p < fo_t_path.length; p++)
                 {
-                   var a = cst_hyg_data.data.filter(function(val) { return val[h_hip] ==aStar[i];});
-                   if (a.length == 0)
-                        cst_hyg_data["data"].push(findAStars(aStar[i],all_hyg_data));
+                        var aStar = fo_t_path[p];
+                        for (var i = 2; i < aStar.length; i++)
+                        {
+                           var a = cst_hyg_data.data.filter(function(val) { return val[h_hip] ==aStar[i];});
+                           if (a.length == 0)
+                                cst_hyg_data["data"].push(findAStars(aStar[i],all_hyg_data));
+                        }
                 }
-        }
 }
 /*************************************************/
 var computeDistanceAndFarestStars=function(starsE)
@@ -116,14 +122,13 @@ if (a.length != 1)
         throw "findAStars("+nb+") : a.length is different of 1. ("+ a +")"+"("+a.length+")";
 return a[0];
 }
-
+/******************************************************************/
 var selectConstellationsStars = function(cstname,starsE)
 {
-//h_con
-var a = starsE.data.filter(function(val) { return val[h_con] ==nb;});
+var a = starsE.data.filter(function(val) { return val[h_con] ==cstname;});
 if (a.length ==0)
         throw "selectConstellationsStars() : a.length is 0 for the constellation "+cstname;
-return a[0];
+return a;
 }
 
 var drawAConstellationConnexion = function(from,to,scene){

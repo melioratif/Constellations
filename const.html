@@ -50,6 +50,7 @@
             min-width: 230px;
             overflow: auto;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            height :800px;
             z-index: 1;
         }
 
@@ -102,7 +103,17 @@ var getCurrentScene  = function() {
      
         window.addEventListener("click", function () {
                 var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-                console.log(pickResult.pickedMesh.name);
+                if (pickResult == null) return;
+                if (pickResult.pickedMesh == null) return;                
+                name =pickResult.pickedMesh.name;
+                if (! name.startsWith("SP")) return;
+                
+                var stars = findAStars(name.substring(3),cst_hyg_data);
+                var ti = document.getElementById("textinformation");             
+                ti.innerHTML =   "const :"+ stars[h_con] +"<br>"+
+                                 "hyg  :"+ stars[h_hip]+"<br>"+
+                                 "x,y,z:"+ stars[h_x_rel]+","+stars[h_y_rel]+","+stars[h_z_rel]+"<br>"+
+                                 "name:"+ stars[h_proper];
 });
 
         _scene = scene;        
@@ -186,7 +197,7 @@ var constructMenu = function()
                 inputelem.setAttribute("type","checkbox");
                 inputelem.setAttribute("value",uniq_cst[i][0]);
                 divelem.appendChild(inputelem);
-                var txtelem = document.createTextNode(uniq_cst[i][1]);
+                var txtelem = document.createTextNode(uniq_cst[i][1]+"("+getNumberOfStars(uniq_cst[i][0],cst_hyg_data)+")");
                 divelem.appendChild(txtelem);
                 divelem.className = "dropbtn";
 
@@ -203,7 +214,7 @@ var constructMenu = function()
                 var btelem = document.createElement("button");
                 btelem.type = "button";
                 btelem.className = "dropbtn";
-                btelem.textContent = uniq_cst[i][1];
+                btelem.textContent = uniq_cst[i][1]+"("+getNumberOfStars(uniq_cst[i][0],cst_hyg_data)+")";
                 btelem.onclick = function(j) { return function() { cameraOn(j); }; }(uniq_cst[i][0]);
 
                 
@@ -271,7 +282,6 @@ var init = function() {
 </script>
 </head>
 <body onload="init()">
-
 <button id="buttonview" class="dropbtn">View</button>
   <div id="viewDrop" class="dropdown-content" style="overflow-y: scroll">
     <input type="text" placeholder="Search.." id="myInputview"><br>
@@ -283,6 +293,8 @@ var init = function() {
     <input type="text" placeholder="Search.." id="myInputselect"><br>
   </div>
 
+<!--<div id="textinformation" style="position:fixed; top:10px; left:50%; color:white">This</div>-->
+<div id="textinformation" style="color:white"></div>
 
 <canvas id="renderCanvas"></canvas>
 
