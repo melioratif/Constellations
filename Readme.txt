@@ -3,5 +3,7 @@ This project is only javascript static file using babylonjs and wikipedia and hy
 
 more informations on melioratif.net.
 
+github pages -> https://melioratif.github.io/Constellations/
+
 ==========================================================================================
 
