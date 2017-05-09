@@ -92,7 +92,7 @@ var getCurrentScene  = function() {
 
 
       var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
-     // camera.attachControl(canvas);  
+      camera.attachControl(canvas);  
       //  camera.noRotationConstraint=true;
         scene.activeCamera = camera;
        
