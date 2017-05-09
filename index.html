@@ -114,8 +114,8 @@ var getCurrentScene  = function() {
                 
                 var stars = constellationsArray[name.split(":")[2]].find(name.split(":")[1]);
                 var ti = document.getElementById("textinformation");             
-                ti.innerHTML =   "const :"+ stars[h_con] +"&emsp;" + "x,y,z:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"<br>"+
-                                 "hyg  :" + stars[h_hip] +"&emsp;" + "name:"+ stars[h_proper] + "<br>";
+                ti.innerHTML =   "const :"+ stars[h_con] +"&emsp;"    + "x,y,z:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"<br>"+
+                                 "hyg  :" + stars[h_hip] +"&emsp;"    + "name:"+ stars[h_proper] +"&emsp;"+  "dist:"+ stars[h_dist_rel] + "<br>";
 });
 
         _scene = scene;        
