@@ -31,11 +31,11 @@ var constructMenu = function()
         divelem.className = "dropbtn";
 
         var short = [];
-        for(key in constellationsArray){short.push(key);}
+        for(key in CONSTELLATIONS.getAll()){short.push(key);}
         short = short.sort();
         for(i in short)
         {
-                var constel = constellationsArray[short[i]];
+                var constel = CONSTELLATIONS.get(short[i]);
                 var divelem = document.createElement("div");
                 mydropdwn.appendChild(divelem);               
                 var inputelem = document.createElement("input");
@@ -52,7 +52,7 @@ var constructMenu = function()
         var mydropdwn = document.getElementById("viewDrop");
         for(i in short)
         {
-                var constel = constellationsArray[short[i]];
+                var constel = CONSTELLATIONS.get(short[i]);
                 var divelem = document.createElement("div");
                 mydropdwn.appendChild(divelem);           
                         
@@ -91,7 +91,7 @@ function filterFunction(idm,inputid) {
 
 var cameraOn=function(cstname)
         {
-                stars = constellationsArray[cstname].cst_stars;
+                stars = CONSTELLATIONS.get(cstname).cst_stars;
                 var x=0,y=0,z=0;        
                 for(var i = 0; i < stars.length; i++)
                 {       
@@ -106,12 +106,12 @@ var cameraOn=function(cstname)
                 
                 getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(x,y,z));
 
-                for (key in  constellationsArray){
-                      var cons = constellationsArray[key];
+                for (key in  CONSTELLATIONS.getAll()){
+                      var cons = CONSTELLATIONS.get(key);
                       cons.resetConnexionColor();
                    }       
                 
-                constellationsArray[cstname].ConnexionToColor();
+                CONSTELLATIONS.get(cstname).ConnexionToColor();
                 }
 
 

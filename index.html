@@ -77,7 +77,9 @@
 
 var _scene = null;
 var cube_stars = 1000; // all stars will be inside a cube of cube_stars.
-var RAW_DATA = new RawData();
+//GLOBAL CLASS
+var RAW_DATA;
+var CONSTELLATIONS;
 
 var getCurrentScene  = function() {
 
@@ -112,7 +114,7 @@ var getCurrentScene  = function() {
                 if (! name.startsWith("SP")) return;
                 
                 
-                var stars = constellationsArray[name.split(":")[2]].find(name.split(":")[1]);
+                var stars = CONSTELLATIONS.get(name.split(":")[2]).find(name.split(":")[1]);
                 var ti = document.getElementById("textinformation");             
                 ti.innerHTML =   "const :"+ stars[h_con] +"&emsp;"    + "x-rel,y-rel,z-rel:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"&emsp;" + "x,y,z:"+ stars[h_x] +","+stars[h_y]+","+stars[h_z]+"<br>"+
                                  "hyg  :" + stars[h_hip] +"&emsp;"    + "name:"+ stars[h_proper] +"&emsp;"+  "dist-rel:"+ stars[h_dist_rel] + "&emsp;"+  "dist:"+ stars[h_dist] +"<br>";
@@ -124,15 +126,15 @@ var getCurrentScene  = function() {
 }
 
 var drawConstellationsStars=function(scene){
-        for (key in  constellationsArray){
-                var cons = constellationsArray[key];
+        for (key in  CONSTELLATIONS.getAll()){
+                var cons = CONSTELLATIONS.get(key);
                 cons.drawConstellationStars(scene);
         }
 }
 
 var drawConstellationsConnexion=function(scene){
-        for (key in  constellationsArray){
-                var cons = constellationsArray[key];
+        for (key in  CONSTELLATIONS.getAll()){
+                var cons = CONSTELLATIONS.get(key);
                 cons.drawConstellationConnexion(scene);
         }
 
@@ -142,13 +144,14 @@ var drawConstellationsConnexion=function(scene){
 //https://www.babylonjs.com/demos/lens/
 var init = function() {
 
-        
-        RAW_DATA.init();
-        initConstellationData();
-        constructMenu();
+        //INITIALISATION OF EVERYTHINGS;
+        RAW_DATA= new RawData();
+        CONSTELLATIONS = new ConstellationsManager(RAW_DATA);
 
-        console.log(RAW_DATA.farest_distance);
-        console.log(RAW_DATA.middle_distance);
+        RAW_DATA.init();
+        CONSTELLATIONS.init();        
+
+        constructMenu();
 
        var scene = getCurrentScene();
        drawConstellationsStars(scene);

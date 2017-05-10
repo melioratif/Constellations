@@ -1,55 +1,65 @@
 
 
-//function CONSTELLATIONS
 
-var constellationsArray = {};
+function ConstellationsManager(rdata){
 
+        this.constellationsArray ={};
 
-function initConstellationData()
-{        
-        for (var i = 0; i < RAW_DATA.allStarsArray().length; i++){
-                if( !(RAW_DATA.allStarsArray()[i][h_con] in constellationsArray )) { 
-                        if(RAW_DATA.allStarsArray()[i][h_con]  == null) continue;
-                        constellationsArray[RAW_DATA.allStarsArray()[i][h_con]] = new constellation(RAW_DATA.allStarsArray()[i][h_con]);
+        this.rawdata = rdata;
+        this.getAll= function(){return this.constellationsArray;}
+        this.get= function(cstname){return this.constellationsArray[cstname];}
+
+        this.init = function()
+        {        
+
+                for (var i = 0; i < this.rawdata.allStarsArray().length; i++){
+                        if( !(this.rawdata.allStarsArray()[i][h_con] in this.constellationsArray )) { 
+                                if(this.rawdata.allStarsArray()[i][h_con]  == null) continue;
+                                this.constellationsArray[this.rawdata.allStarsArray()[i][h_con]] = new Constellation(this.rawdata.allStarsArray()[i][h_con]);
+                        }
+                        this.constellationsArray[this.rawdata.allStarsArray()[i][h_con]].all_stars.push(this.rawdata.allStarsArray()[i]);
                 }
-                constellationsArray[RAW_DATA.allStarsArray()[i][h_con]].all_stars.push(RAW_DATA.allStarsArray()[i]);
-        }
 
-        for (var p = 0; p < fo_t_path.length; p++)
-          {
-                var aStar = fo_t_path[p];
-                constellationsArray[aStar[0]].fullname = aStar[1];
+                for (var p = 0; p < fo_t_path.length; p++)
+                  {
+                        var aStar = fo_t_path[p];
+                        this.constellationsArray[aStar[0]].fullname = aStar[1];
 
-                for (var i = 2; i < aStar.length; i++)
-                    {
-                        var a = RAW_DATA.allStarsArray().filter(function(val) { return val[h_hip] == aStar[i];});
-                        if (a.length != 1)
-                                throw "findAStars("+aStar[0]+"="+aStar[i]+") : a.length is different of 1. ("+ a +")"+"("+a.length+")";
- 
-                       constellationsArray[aStar[0]].cst_stars.push(a[0]);
-                    }
-          }
+                        for (var i = 2; i < aStar.length; i++)
+                            {
+                                var a = this.rawdata.allStarsArray().filter(function(val) { return val[h_hip] == aStar[i];});
+                                if (a.length != 1)
+                                        throw "findAStars("+aStar[0]+"="+aStar[i]+") : a.length is different of 1. ("+ a +")"+"("+a.length+")";
+         
+                               this.constellationsArray[aStar[0]].cst_stars.push(a[0]);
+                            }
+                  }
 
-        for (var p = 0; p < fo_t_path.length; p++)
-        {
-                var aConstell = fo_t_path[p];
-
-                var c = constellationsArray[aConstell[0]];
-                for (var i = 3; i < aConstell.length; i++) // 3 because, the 2 first is the name and the shortname
+                for (var p = 0; p < fo_t_path.length; p++)
                 {
-                   var from = c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i-1];});
-                   var to =c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i];});
-                
-//                   if (from.length != 1){
- //                       console.log(aConstell[0]);
- //                       console.log(from);
-  //                   }
-                    c.cst_connect.push([from[0],to[0]]);
+                        var aConstell = fo_t_path[p];
+
+                        var c = this.constellationsArray[aConstell[0]];
+                        for (var i = 3; i < aConstell.length; i++) // 3 because, the 2 first is the name and the shortname
+                        {
+                           var from = c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i-1];});
+                           var to =c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i];});
+                        
+        //                   if (from.length != 1){
+         //                       console.log(aConstell[0]);
+         //                       console.log(from);
+          //                   }
+                            c.cst_connect.push([from[0],to[0]]);
+                        }
                 }
-        }
 }
 
-function constellation(name){
+
+}
+
+
+
+function Constellation(name){
         this.fullname = "";
         this.shortname = name;
         this.farest_stars = 0;
