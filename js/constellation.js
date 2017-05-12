@@ -18,6 +18,10 @@ function ConstellationsManager(rdata){
                                 this.constellationsArray[this.rawdata.allStarsArray()[i][h_con]] = new Constellation(this.rawdata.allStarsArray()[i][h_con]);
                         }
                         this.constellationsArray[this.rawdata.allStarsArray()[i][h_con]].all_stars.push(this.rawdata.allStarsArray()[i]);
+
+                        // spectrum filter
+                        if(this.rawdata.allStarsArray()[i][h_spect] =='Am...' )this.rawdata.allStarsArray()[i][h_spect] = "A2";
+                        if(this.rawdata.allStarsArray()[i][h_spect] =='Am' )this.rawdata.allStarsArray()[i][h_spect] = "A2";
                 }
 
                 for (var p = 0; p < fo_t_path.length; p++)
@@ -52,11 +56,8 @@ function ConstellationsManager(rdata){
                             c.cst_connect.push([from[0],to[0]]);
                         }
                 }
+        }
 }
-
-
-}
-
 
 
 function Constellation(name){
@@ -90,6 +91,27 @@ function Constellation(name){
                 }
         }
 
+        this.getHTMLInfo = function(hipnb)
+        {
+        var stars = this.find(hipnb);
+        return   "const :"+ stars[h_con] +"&emsp;"    + 
+                "x-rel,y-rel,z-rel:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"&emsp;" + 
+                "x,y,z:"+ stars[h_x] +","+stars[h_y]+","+stars[h_z]+"&emsp;"+ 
+                "spect :"+ stars[h_spect]+"<br>"+
+
+
+                 "hyg  :" + stars[h_hip] +"&emsp;"    + 
+                 "name:"+ stars[h_proper] +"&emsp;"+  
+                 "dist-rel:"+ stars[h_dist_rel] + "&emsp;"+  
+                 "dist:"+ stars[h_dist] +"&emsp;" +
+                 "absMag :"+ stars[h_absmag]+"<br>"+
+
+                  "sp_name :" +DIAGRAM_HR.getName(stars[h_spect])    +"&emsp;" +
+                  "sp_radius :" +DIAGRAM_HR.getRadius(stars[h_spect])+"&emsp;" +
+                  "sp_mass :" +DIAGRAM_HR.getMass(stars[h_spect])    +"<br>";
+
+        }
+
 
         this.find=function(hipnb)
         {
@@ -103,19 +125,23 @@ function Constellation(name){
         {
             for (var p = 0; p < this.cst_stars.length; p++){                     
                    var stars_info = this.cst_stars[p]; 
-                   var light0 = new BABYLON.PointLight("LI:"+stars_info[h_hip], new BABYLON.Vector3(stars_info[h_x_rel],stars_info[h_y_rel],stars_info[h_z_rel]), scene);
+//                   var light0 = new BABYLON.PointLight("LI:"+stars_info[h_hip], , scene);
 
-            
-                    // Creating light sphere
-                    // Let's try our built-in 'sphere' shape. Params: name, subdivisions, size, scene
-                    var lightSphere0 = BABYLON.Mesh.CreateSphere("SP:"+stars_info[h_hip]+":"+stars_info[h_con], 10, 30, scene);
+                    var sun = BABYLON.Mesh.CreateSphere("SP:"+stars_info[h_hip]+":"+stars_info[h_con], 10, SIZE_OF_THE_SUN*DIAGRAM_HR.getRadius(stars_info[h_spect]), scene); 
+                    sun.material = new BABYLON.StandardMaterial("SM:"+stars_info[h_hip], scene);
+                    var c = DIAGRAM_HR.getColor(stars_info[h_spect]);
+
+                    //The diffuse is the native color of the object material once it is lit with a light. You can specify a solid color with the diffuseColor property:
+                    sun.material.diffuseColor = new BABYLON.Color3(0,0,0); // color object
                     
-                    lightSphere0.material = new BABYLON.StandardMaterial("SM:"+stars_info[h_hip], scene);
-                    lightSphere0.material.diffuseColor = new BABYLON.Color3(0.5,0.7 , 0);
-                    lightSphere0.material.specularColor = new BABYLON.Color3(1, 0, 0);
-                    lightSphere0.material.emissiveColor = new BABYLON.Color3(1, 0.5, 1);
+                    //The specular is the color produced by a light reflecting from a surface. You can specify a solid color with the specularColor property:
+                    sun.material.specularColor = new BABYLON.Color3(0,0,0);
 
-                    lightSphere0.position = light0.position;    
+                   //The emissive is the color produced by the object itself. You can specify a solid color with the emissiveColor property:
+                    sun.material.emissiveColor = new BABYLON.Color3(c[0],c[1], c[2]);
+
+//                    sun.position = light0.position;    
+                      sun.position = new BABYLON.Vector3(stars_info[h_x_rel],stars_info[h_y_rel],stars_info[h_z_rel])
                  }
         }
 

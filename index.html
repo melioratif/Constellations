@@ -71,15 +71,18 @@
    <script src="js/constellation.js"></script>
    <script src="js/hyg.js"></script>
    <script src="js/menu.js"></script>
+   <script src="js/diagramHR.js"></script>
    <script src="js/fol_the_path.js"></script>
 
  <script type="text/javascript">
 
 var _scene = null;
 var cube_stars = 1000; // all stars will be inside a cube of cube_stars.
+var SIZE_OF_THE_SUN = 30  // size of the sun.
 //GLOBAL CLASS
 var RAW_DATA;
 var CONSTELLATIONS;
+var DIAGRAM_HR;
 
 var getCurrentScene  = function() {
 
@@ -92,11 +95,14 @@ var getCurrentScene  = function() {
           
 //           scene.debugLayer.show();     
 
-
-      var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
+        var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
+//      var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
       camera.attachControl(canvas);  
+
+      var light0 = new BABYLON.PointLight("mainLight", new BABYLON.Vector3(0,0,0), scene);
+      light0.parent = camera;
       //  camera.noRotationConstraint=true;
-        scene.activeCamera = camera;
+      scene.activeCamera = camera;
        
       engine.runRenderLoop(function () {
          scene.render();
@@ -114,10 +120,8 @@ var getCurrentScene  = function() {
                 if (! name.startsWith("SP")) return;
                 
                 
-                var stars = CONSTELLATIONS.get(name.split(":")[2]).find(name.split(":")[1]);
                 var ti = document.getElementById("textinformation");             
-                ti.innerHTML =   "const :"+ stars[h_con] +"&emsp;"    + "x-rel,y-rel,z-rel:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"&emsp;" + "x,y,z:"+ stars[h_x] +","+stars[h_y]+","+stars[h_z]+"<br>"+
-                                 "hyg  :" + stars[h_hip] +"&emsp;"    + "name:"+ stars[h_proper] +"&emsp;"+  "dist-rel:"+ stars[h_dist_rel] + "&emsp;"+  "dist:"+ stars[h_dist] +"<br>";
+                ti.innerHTML = CONSTELLATIONS.get(name.split(":")[2]).getHTMLInfo(name.split(":")[1]);
 });
 
         _scene = scene;        
@@ -146,6 +150,7 @@ var init = function() {
 
         //INITIALISATION OF EVERYTHINGS;
         RAW_DATA= new RawData();
+        DIAGRAM_HR = new DiagramHR();
         CONSTELLATIONS = new ConstellationsManager(RAW_DATA);
 
         RAW_DATA.init();
