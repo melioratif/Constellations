@@ -32,7 +32,7 @@ var constructMenu = function()
 
         var short = [];
         for(key in CONSTELLATIONS.getAll()){short.push(key);}
-        short = short.sort();
+        short = short.sort(function(a, b){return CONSTELLATIONS.get(b).getCstStarLength() - CONSTELLATIONS.get(a).getCstStarLength();});
         for(i in short)
         {
                 var constel = CONSTELLATIONS.get(short[i]);

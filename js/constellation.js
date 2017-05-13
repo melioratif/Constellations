@@ -69,6 +69,7 @@ function Constellation(name){
         this.cst_stars = [];
         this.cst_connect = [];
 
+        this.getCstStarLength=function(){return this.cst_stars.length;}
 
         this.resetConnexionColor = function()
         {
