@@ -67,10 +67,21 @@ var constructMenu = function()
                 divelem.appendChild(btelem);
                 divelem.appendChild(document.createElement("br"));
         }
+
+
+                var canvas = document.querySelector("#renderCanvas");
+                canvas.addEventListener("click", function () {
+                        document.getElementById("viewDrop").classList.remove("show");
+                        document.getElementById("selectDrop").classList.remove("show");
+                });
+
+
+
 }
 
 function myF(mId) {
-            document.getElementById(mId).classList.toggle("show");
+             document.getElementById(mId).classList.toggle("show");
+            document.getElementById(mId).getElementsByTagName("input")[0].focus();
         }
 
 function filterFunction(idm,inputid) {
