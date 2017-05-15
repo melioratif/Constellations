@@ -32,7 +32,7 @@ var constructMenu = function()
 
         var short = [];
         for(key in CONSTELLATIONS.getAll()){short.push(key);}
-        short = short.sort(function(a, b){return CONSTELLATIONS.get(b).getCstStarLength() - CONSTELLATIONS.get(a).getCstStarLength();});
+        short = short.sort(function(a, b){return CONSTELLATIONS.get(b).getStarsLength() - CONSTELLATIONS.get(a).getStarsLength();});
         for(i in short)
         {
                 var constel = CONSTELLATIONS.get(short[i]);
@@ -90,6 +90,9 @@ function filterFunction(idm,inputid) {
 
             var div = document.getElementById(idm);
             var a = div.getElementsByTagName("div");
+            
+//            var  CONSTELLATIONS.findByHyg(f);
+
             for (var i = 0; i < a.length; i++) {
                 if (a[i].textContent.toUpperCase().indexOf(filter) > -1) {
                     a[i].style.display = "";
@@ -100,9 +103,26 @@ function filterFunction(idm,inputid) {
         }
 
 
+
 var cameraOn=function(cstname)
         {
                 stars = CONSTELLATIONS.get(cstname).cst_stars;
+
+/*******************Debug***************************/
+                console.log("number of stars:",CONSTELLATIONS.get(cstname).getStarsLength());
+                console.log("number of connect:",CONSTELLATIONS.get(cstname).getConnexionLength());
+                var connect = CONSTELLATIONS.get(cstname).cst_connect;         
+                for (var i =0; i < connect.length; i++)
+                        {
+                      
+                                console.log("from:",connect[i][0][h_hip],"==","to",connect[i][1][h_hip]);
+                        }
+                var ti = document.getElementById("textinformation");             
+                ti.innerHTML = CONSTELLATIONS.get(cstname).getHTMLInfo(connect[0][0][h_hip]);
+//                ti.innerHTML = CONSTELLATIONS.get(cstname).getHTMLInfo(87073);
+
+
+/**********************************************/
                 var x=0,y=0,z=0;        
                 for(var i = 0; i < stars.length; i++)
                 {       

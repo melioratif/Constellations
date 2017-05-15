@@ -9,6 +9,21 @@ function ConstellationsManager(rdata){
         this.getAll= function(){return this.constellationsArray;}
         this.get= function(cstname){return this.constellationsArray[cstname];}
 
+        this.findByHyg = function(hyg)
+        {   
+         var ret = [];
+         for(key in constellationsArray)
+                {
+                 var cst = constellationsArray[key];
+                 var s = cst.contains(hyg);
+                 if (s.length != 0)
+                        {
+                          ret.push(cst);
+                        }
+                }
+          return ret;
+        }
+
         this.init = function()
         {        
 
@@ -57,6 +72,9 @@ function ConstellationsManager(rdata){
                         }
                 }
         }
+
+        
+
 }
 
 
@@ -69,7 +87,8 @@ function Constellation(name){
         this.cst_stars = [];
         this.cst_connect = [];
 
-        this.getCstStarLength=function(){return this.cst_stars.length;}
+        this.getStarsLength=function(){return this.cst_stars.length;}
+        this.getConnexionLength=function(){return this.cst_connect.length;}
 
         this.resetConnexionColor = function()
         {
@@ -98,7 +117,8 @@ function Constellation(name){
         return   "const :"+ stars[h_con] +"&emsp;"    + 
                 "x-rel,y-rel,z-rel:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"&emsp;" + 
                 "x,y,z:"+ stars[h_x] +","+stars[h_y]+","+stars[h_z]+"&emsp;"+ 
-                "spect :"+ stars[h_spect]+"<br>"+
+                "spect :"+ stars[h_spect]+"&emsp;"    + 
+                "bf :"+ stars[h_bf]+"<br>"+
 
 
                  "hyg  :" + stars[h_hip] +"&emsp;"    + 

@@ -77,8 +77,8 @@
  <script type="text/javascript">
 
 var _scene = null;
-var cube_stars = 1000; // all stars will be inside a cube of cube_stars.
-var SIZE_OF_THE_SUN = 30  // size of the sun.
+var cube_stars = 8000; // all stars will be inside a cube of cube_stars.
+var SIZE_OF_THE_SUN = 5  // size of the sun.
 //GLOBAL CLASS
 var RAW_DATA;
 var CONSTELLATIONS;
@@ -160,13 +160,12 @@ var init = function() {
 
         RAW_DATA.init();
         CONSTELLATIONS.init();        
-
         constructMenu();
 
        var scene = getCurrentScene();
        drawConstellationsStars(scene);
        drawConstellationsConnexion(scene);
-//       drawStarsFromADataSet(scene,all_hyg_data,["UMa"]);
+//       dsrawStarsFromADataSet(scene,all_hyg_data,["UMa"]);
 
 }
 
@@ -183,6 +182,7 @@ var init = function() {
   <div id="selectDrop" class="dropdown-content" style="overflow-y: scroll">
     <input type="text" placeholder="Search.." id="myInputselect"><br>
   </div>
+
 
 <div id="textinformation" style="position:fixed; top:10px; left:50%; color:white"></div>
 <!--<div id="textinformation" style="color:white"></div>-->
