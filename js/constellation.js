@@ -37,6 +37,9 @@ function ConstellationsManager(rdata){
                         // spectrum filter
                         if(this.rawdata.allStarsArray()[i][h_spect] =='Am...' )this.rawdata.allStarsArray()[i][h_spect] = "A2";
                         if(this.rawdata.allStarsArray()[i][h_spect] =='Am' )this.rawdata.allStarsArray()[i][h_spect] = "A2";
+                        if(this.rawdata.allStarsArray()[i][h_spect] =='Ap Si' )this.rawdata.allStarsArray()[i][h_spect] = "A2";
+                        if(this.rawdata.allStarsArray()[i][h_spect] =='A+...' )this.rawdata.allStarsArray()[i][h_spect] = "A2";
+
                 }
 
                 for (var p = 0; p < fo_t_path.length; p++)
@@ -63,12 +66,10 @@ function ConstellationsManager(rdata){
                         {
                            var from = c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i-1];});
                            var to =c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i];});
-                        
-        //                   if (from.length != 1){
-         //                       console.log(aConstell[0]);
-         //                       console.log(from);
-          //                   }
-                            c.cst_connect.push([from[0],to[0]]);
+                           if(from.length !=1) console.log(aConstell,"+",from);
+                           if(to.length !=1) console.log(aConstell,"=",to);
+
+                           c.cst_connect.push([from[0],to[0]]);
                         }
                 }
         }
