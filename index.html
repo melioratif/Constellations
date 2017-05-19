@@ -77,14 +77,16 @@
  <script type="text/javascript">
 
 var _scene = null;
-var cube_stars = 8000; // all stars will be inside a cube of cube_stars.
-var SIZE_OF_THE_SUN = 5  // size of the sun.
+var cube_stars = 5000; // all stars will be inside a cube of cube_stars.
+var SIZE_OF_THE_SUN = 2  // size of the sun.
 //GLOBAL CLASS
 var RAW_DATA;
 var CONSTELLATIONS;
 var DIAGRAM_HR;
 
 //git test
+
+
 
 var getCurrentScene  = function() {
 
@@ -95,10 +97,10 @@ var getCurrentScene  = function() {
       scene = new BABYLON.Scene(engine);
       scene.clearColor = new BABYLON.Color3(0, 0, 0);
           
-//           scene.debugLayer.show();     
+       //    scene.debugLayer.show();     
 
-        var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
-//      var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
+      var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
+//    var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
       camera.attachControl(canvas);  
 
       var light0 = new BABYLON.PointLight("mainLight", new BABYLON.Vector3(0,0,0), scene);
@@ -117,22 +119,55 @@ var getCurrentScene  = function() {
       canvas.addEventListener("click", function () {
 
                 
-                var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-                if (pickResult == null) return;
-                if (pickResult.pickedMesh == null) return;                
-                name =pickResult.pickedMesh.name;
-                if (! name.startsWith("SP")) return;
-                
-                
                 var ti = document.getElementById("textinformation");             
+                var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+                if (pickResult == null) {ti.innerHTML ="";return;}
+                if (pickResult.pickedMesh == null){ti.innerHTML ="";return;};                
+                name =pickResult.pickedMesh.name;
+                if (! name.startsWith("SP")) {ti.innerHTML ="";return;};
+                
+                
                 ti.innerHTML = CONSTELLATIONS.get(name.split(":")[2]).getHTMLInfo(name.split(":")[1]);
 
+        });
+
+     window.addEventListener("keydown", function (evt) {
+    // Press space key to fire
+            if (evt.keyCode === 32) {
+                var cur= CONSTELLATIONS.currentCst;
+                if (cur =="")
+                        {
+                           cur="UMa";
+                        }
+                else
+                        {
+                          var f = Object.keys(CONSTELLATIONS.getAll()).sort().filter(function (value, index, self) {  return self.indexOf(value) === index;});
+                          var i = -1;
+                          for(i = -1; i <f.length; i++){if(f[i]===cur){break;}}
+                          
+                          if (i == -1 || i == f.length-2) cur =  f[0];
+                          else  cur = f[i+1];
+                        }        
+                 console.log("cur",cur);
+                cameraOn(cur);
+                CONSTELLATIONS.currentCst = cur;
+
+            }
 });
 
         _scene = scene;        
         return scene;
 
 }
+
+
+var drawAllStars=function(scene){
+        for (key in  CONSTELLATIONS.getAll()){
+                var cons = CONSTELLATIONS.get(key);
+                cons.drawAllStars(scene);
+        }
+}
+
 
 var drawConstellationsStars=function(scene){
         for (key in  CONSTELLATIONS.getAll()){
@@ -172,16 +207,19 @@ var init = function() {
 </script>
 </head>
 <body onload="init()">
-<button id="buttonview" class="dropbtn">View</button>
+<button id="buttonview" class="dropbtn">Constellations</button>
   <div id="viewDrop" class="dropdown-content" style="overflow-y: scroll">
     <input type="text" placeholder="Search.." id="myInputview"><br>
   </div>
 
 
-<button id="buttonselect"  class="dropbtn">Select</button>
-  <div id="selectDrop" class="dropdown-content" style="overflow-y: scroll">
+<!--<button id="buttonselect"  class="dropbtn">Toogle All Stars</button>-->
+<!--  <div id="selectDrop" class="dropdown-content" style="overflow-y: scroll">
     <input type="text" placeholder="Search.." id="myInputselect"><br>
-  </div>
+  </div>-->
+
+<button id="buttongobackhome"  class="dropbtn">Go Back Home</button>
+<button id="buttonstars"  class="dropbtn">Show All Stars</button>
 
 
 <div id="textinformation" style="position:fixed; top:10px; left:50%; color:white"></div>

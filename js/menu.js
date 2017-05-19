@@ -2,52 +2,42 @@
 var constructMenu = function()
 {      
         document.getElementById("buttonview").addEventListener("click", function() {myF("viewDrop");}, false);
-        document.getElementById("buttonselect").addEventListener("click", function() {myF("selectDrop");}, false);
+
+        document.getElementById("buttonstars").addEventListener("click", function() {
+
+                        var scene= getCurrentScene();
+                        var camera = scene.activecamera;
+                        scene.removeMesh(scene.getActiveMeshes());
+                        scene.removeMaterial
+
+                        for (key in  CONSTELLATIONS.getAll()){
+                                var cons = CONSTELLATIONS.get(key);
+ 
+                                if (document.getElementById("buttonstars").textContent === "Show All Stars")
+                                        cons.drawAllStars(scene);
+                                else    
+                                        cons.drawConstellationStars(scene);
+                        }
+                        if (document.getElementById("buttonstars").textContent === "Show All Stars")
+                                document.getElementById("buttonstars").textContent = "Show All Stars"
+                        else    
+                                document.getElementById("buttonstars").textContent = "Hide All Stars"
+
+                }, false);
+
+
+        document.getElementById("buttongobackhome").addEventListener("click", function() 
+                                        {
+                                                getCurrentScene().activeCamera.position = new BABYLON.Vector3(0,0,0);
+                                                document.getElementById("renderCanvas").focus();
+                                        },false);
+
+
         document.getElementById("myInputview").addEventListener("keyup", function() {filterFunction('viewDrop','myInputview');});
-        document.getElementById("myInputselect").addEventListener("keyup", function() {filterFunction('selectDrop','myInputselect');});
-
-
-//            <input type="checkbox" name="all" value=All class="dropdown-content">All<br>
-        var mydropdwn = document.getElementById("selectDrop");
-        var divelem = document.createElement("div");
-        mydropdwn.appendChild(divelem);               
-        var inputelem = document.createElement("input");
-        inputelem.setAttribute("type","checkbox");
-        inputelem.setAttribute("value","All");
-        divelem.appendChild(inputelem);
-        var txtelem = document.createTextNode("All");
-        divelem.appendChild(txtelem);
-        divelem.className = "dropbtn";
-
-//    <input type="checkbox" name="none" value="None" class="dropdown-content">None<br>
-        var divelem = document.createElement("div");
-        mydropdwn.appendChild(divelem);               
-        var inputelem = document.createElement("input");
-        inputelem.setAttribute("type","checkbox");
-        inputelem.setAttribute("value","None");
-        divelem.appendChild(inputelem);
-        var txtelem = document.createTextNode("None");
-        divelem.appendChild(txtelem);
-        divelem.className = "dropbtn";
 
         var short = [];
         for(key in CONSTELLATIONS.getAll()){short.push(key);}
         short = short.sort(function(a, b){return CONSTELLATIONS.get(b).getStarsLength() - CONSTELLATIONS.get(a).getStarsLength();});
-        for(i in short)
-        {
-                var constel = CONSTELLATIONS.get(short[i]);
-                var divelem = document.createElement("div");
-                mydropdwn.appendChild(divelem);               
-                var inputelem = document.createElement("input");
-                inputelem.setAttribute("type","checkbox");
-                inputelem.setAttribute("value",constel.shortname);
-                divelem.appendChild(inputelem);
-                var txtelem = document.createTextNode(constel.fullname+"("+constel.cst_stars.length+")");
-                divelem.appendChild(txtelem);
-                divelem.className = "dropbtn";
-
-                divelem.appendChild(document.createElement("br"));
-        }
 
         var mydropdwn = document.getElementById("viewDrop");
         for(i in short)
@@ -72,7 +62,6 @@ var constructMenu = function()
                 var canvas = document.querySelector("#renderCanvas");
                 canvas.addEventListener("click", function () {
                         document.getElementById("viewDrop").classList.remove("show");
-                        document.getElementById("selectDrop").classList.remove("show");
                 });
 
 
@@ -100,6 +89,7 @@ function filterFunction(idm,inputid) {
                     a[i].style.display = "none";
                 }
             }
+
         }
 
 
@@ -114,8 +104,7 @@ var cameraOn=function(cstname)
                 var connect = CONSTELLATIONS.get(cstname).cst_connect;         
                 for (var i =0; i < connect.length; i++)
                         {
-                      
-                                console.log("from:",connect[i][0][h_hip],"==","to",connect[i][1][h_hip]);
+                         console.log("from:",connect[i][0][h_hip],"==","to",connect[i][1][h_hip]);
                         }
                 var ti = document.getElementById("textinformation");             
                 ti.innerHTML = CONSTELLATIONS.get(cstname).getHTMLInfo(connect[0][0][h_hip]);
@@ -143,15 +132,7 @@ var cameraOn=function(cstname)
                    }       
                 
                 CONSTELLATIONS.get(cstname).ConnexionToColor();
+                document.getElementById("renderCanvas").focus();
+                document.getElementById("viewDrop").classList.remove("show");
+
                 }
-
-
-
-
-
-
-
-
-
-
-

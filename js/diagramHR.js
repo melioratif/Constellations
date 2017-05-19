@@ -7,10 +7,12 @@ function DiagramHR(){
 
 
         this.getColor=function(spect){
-                        
                 var a = this.color[spect[0]]; // we take the first letter for the color.
-                if (a == null)
-                        throw "[FILE : diagramHR][getColor] Impossible to find the color for the spect :"+ spect;
+                 if (a == null)
+                 {
+                         console.log(   "[FILE : diagramHR][getSpectrumClass] Impossible to find the spectrum Class for the spect : "+ spect);
+                        return undefined; 
+                 }
                 return a;
                 }
         this.color = {
@@ -50,7 +52,7 @@ function DiagramHR(){
                         
                 var a = this.nameClass[spect[0]]; // we take the first letter for the color.
                 if (a == null)
-                        throw "[FILE : diagramHR][getName] Impossible to find the  name for the spect :"+ spect;
+                   return undefined; 
                 return a;
                 }
         
@@ -74,13 +76,15 @@ function DiagramHR(){
         this.getSpectrumClass=function(spect){//2
                         
                 var a = null;
-
                 if (spect[0] == 'A' || spect[0]=='B') // we take the first letter for the color.
                         a = this.spectrumClass[spect.substring(0,2)];
                 else 
                         a = this.spectrumClass[spect[0]];
                 if (a == null)
-                        throw "[FILE : diagramHR][getSpectrumClass] Impossible to find the spectrum Class for the spect : "+ spect;
+                   {  a = this.spectrumClass["A0"];
+                     console.log(spect);            } 
+
+           //             throw "[FILE : diagramHR][getSpectrumClass] Impossible to find the spectrum Class for the spect : "+ spect;
                 return a;
                 }
 
