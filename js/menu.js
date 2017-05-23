@@ -2,34 +2,51 @@
 var constructMenu = function()
 {      
         document.getElementById("buttonview").addEventListener("click", function() {myF("viewDrop");}, false);
-
         document.getElementById("buttonstars").addEventListener("click", function() {
 
-                        var scene= getCurrentScene();
-                        var camera = scene.activecamera;
-                        scene.removeMesh(scene.getActiveMeshes());
-                        scene.removeMaterial
 
-                        for (key in  CONSTELLATIONS.getAll()){
-                                var cons = CONSTELLATIONS.get(key);
- 
-                                if (document.getElementById("buttonstars").textContent === "Show All Stars")
-                                        cons.drawAllStars(scene);
-                                else    
-                                        cons.drawConstellationStars(scene);
+                        if (document.getElementById("buttonstars").textContent === "Show All Stars"){
+                                if(CONSTELLATIONS.oneConstellationMode == false && !confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) return; 
+                                document.getElementById("buttonstars").textContent = "Hide All Stars";
+                                CONSTELLATIONS.showAllStars = true;
                         }
-                        if (document.getElementById("buttonstars").textContent === "Show All Stars")
-                                document.getElementById("buttonstars").textContent = "Show All Stars"
                         else    
-                                document.getElementById("buttonstars").textContent = "Hide All Stars"
+                        {
+                                document.getElementById("buttonstars").textContent = "Show All Stars";
+                                CONSTELLATIONS.showAllStars = false;
+                        }
+
+                CONSTELLATIONS.redrawAllWithOptions();
 
                 }, false);
+
+        document.getElementById("buttononeconst").addEventListener("click", function() 
+                                {
+
+                                if (document.getElementById("buttononeconst").textContent === "Set One Constellation Mode")
+                                        {
+                                        if (CONSTELLATIONS.showAllStars)
+                                                if(!confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) return; 
+                                        document.getElementById("buttononeconst").textContent = "Set All Constellation Mode"
+                                        CONSTELLATIONS.oneConstellationMode =  true;                               
+                                        }
+                                else    
+                                        {
+                                                document.getElementById("buttononeconst").textContent = "Set One Constellation Mode"
+                                                CONSTELLATIONS.oneConstellationMode = false;                                
+                                        }
+                                CONSTELLATIONS.redrawAllWithOptions();
+                                }, false);
+
+
+
+
 
 
         document.getElementById("buttongobackhome").addEventListener("click", function() 
                                         {
-                                                getCurrentScene().activeCamera.position = new BABYLON.Vector3(0,0,0);
-                                                document.getElementById("renderCanvas").focus();
+                                            cameraOn(CONSTELLATIONS.currentCst);    
+                                            document.getElementById("renderCanvas").focus();
                                         },false);
 
 
@@ -71,6 +88,7 @@ var constructMenu = function()
 function myF(mId) {
              document.getElementById(mId).classList.toggle("show");
             document.getElementById(mId).getElementsByTagName("input")[0].focus();
+            CONSTELLATIONS.currentCst = mID;    
         }
 
 function filterFunction(idm,inputid) {
@@ -92,32 +110,23 @@ function filterFunction(idm,inputid) {
 
         }
 
-
-
 var cameraOn=function(cstname)
         {
                 stars = CONSTELLATIONS.get(cstname).cst_stars;
 
-/*******************Debug***************************/
-                console.log("number of stars:",CONSTELLATIONS.get(cstname).getStarsLength());
-                console.log("number of connect:",CONSTELLATIONS.get(cstname).getConnexionLength());
-                var connect = CONSTELLATIONS.get(cstname).cst_connect;         
-                for (var i =0; i < connect.length; i++)
-                        {
-                         console.log("from:",connect[i][0][h_hip],"==","to",connect[i][1][h_hip]);
-                        }
                 var ti = document.getElementById("textinformation");             
-                ti.innerHTML = CONSTELLATIONS.get(cstname).getHTMLInfo(connect[0][0][h_hip]);
-//                ti.innerHTML = CONSTELLATIONS.get(cstname).getHTMLInfo(87073);
+                ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
 
-
-/**********************************************/
-                var x=0,y=0,z=0;        
+                var x=0,y=0,z=0;
+                var min_dist= stars[0][h_dist_rel];        
+                var max_dist= 0;        
                 for(var i = 0; i < stars.length; i++)
                 {       
                         x+= stars[i][h_x_rel];
                         y+= stars[i][h_y_rel];
                         z+= stars[i][h_z_rel];
+                        if(min_dist > stars[i][h_dist_rel])min_dist = stars[i][h_dist_rel];
+                        if(max_dist < stars[i][h_dist_rel])max_dist = stars[i][h_dist_rel];
                 }
                 x= x/stars.length;
                 y= y/stars.length;
@@ -125,14 +134,18 @@ var cameraOn=function(cstname)
                 
                 
                 getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(x,y,z));
+                getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0,0,0));
+//                getCurrentScene().activeCamera.radius = (max_dist+min_dist)/2;
 
                 for (key in  CONSTELLATIONS.getAll()){
                       var cons = CONSTELLATIONS.get(key);
                       cons.resetConnexionColor();
-                   }       
+                }       
                 
                 CONSTELLATIONS.get(cstname).ConnexionToColor();
                 document.getElementById("renderCanvas").focus();
                 document.getElementById("viewDrop").classList.remove("show");
 
+                var ti = document.getElementById("textinformation");             
+                ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
                 }

@@ -5,10 +5,42 @@ function ConstellationsManager(rdata){
 
         this.constellationsArray ={};
 
+        this.oneConstellationMode = false; // 0 means all constellation, 1 mean only one is showed
+        this.showAllStars =  false;
+
         this.rawdata = rdata;
-        this.currentCst = "";
+        this.currentCst = "UMa";
+        
         this.getAll= function(){return this.constellationsArray;}
         this.get= function(cstname){return this.constellationsArray[cstname];}
+
+        this.redrawAllWithOptions=function()
+        {
+         var scene= getCurrentScene();         
+         while(scene.meshes.length !=0){scene.meshes[0].dispose();}
+         
+
+         if (this.oneConstellationMode==true)
+                {
+                 var c = CONSTELLATIONS.get(this.currentCst);
+                 if (this.showAllStars == true) 
+                        c.drawAllStars(scene);
+                 else 
+                        c.drawConstellationStars(scene);
+
+                c.drawConstellationConnexion(scene);
+
+          }else{
+          for (key in  CONSTELLATIONS.getAll()){
+                var c = CONSTELLATIONS.get(key);  
+                 if (this.showAllStars == true) c.drawAllStars(scene);
+                 else c.drawConstellationStars(scene);
+               
+                 c.drawConstellationConnexion(scene);
+                 }
+        
+            }
+        }
 
         this.findByHyg = function(hyg)
         {   
@@ -77,10 +109,7 @@ function ConstellationsManager(rdata){
                            var from = c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i-1];});
                            var to =c.cst_stars.filter(function(val) { return val[h_hip] == aConstell[i];});
 
-                           if(from.length !=1) console.log(aConstell,"+",from);
-                           if(to.length !=1) console.log(aConstell,"=",to);
-
-                           c.cst_connect.push([from[0],to[0]]);
+                           c.cst_connect.push([from[0],to[0],null]);
                         }
                 }
         }
@@ -106,7 +135,8 @@ function Constellation(name){
 
         this.ConnexionToColor = function()
         {
-         this.setToColor(new BABYLON.Color3(1,0 , 0));
+         console.log("Connexion to Color");
+         this.setToColor(new BABYLON.Color3(1,0,0));
        }
 
 
@@ -116,7 +146,7 @@ function Constellation(name){
                 {
                       
                       var line = this.cst_connect[i][2];
-                      line.color = color
+                      line.color = color;
                 }
         }
 
@@ -154,24 +184,25 @@ function Constellation(name){
         this.drawAStars = function(scene, stars_info)
         {
 //                var light0 = new BABYLON.PointLight("LI:"+stars_info[h_hip], , scene);
+                try  {              
+                        var sun = BABYLON.Mesh.CreateSphere("SP:"+stars_info[h_hip]+":"+stars_info[h_con], 10, SIZE_OF_THE_SUN*DIAGRAM_HR.getRadius(stars_info[h_spect]), scene); 
+                        sun.material = new BABYLON.StandardMaterial("SM:"+stars_info[h_hip], scene);
 
-                var sun = BABYLON.Mesh.CreateSphere("SP:"+stars_info[h_hip]+":"+stars_info[h_con], 10, SIZE_OF_THE_SUN*DIAGRAM_HR.getRadius(stars_info[h_spect]), scene); 
-                sun.material = new BABYLON.StandardMaterial("SM:"+stars_info[h_hip], scene);
+                        var c = DIAGRAM_HR.getColor(stars_info[h_spect]);
 
-                var c = DIAGRAM_HR.getColor(stars_info[h_spect]);
+                        //The diffuse is the native color of the object material once it is lit with a light. You can specify a solid color with the diffuseColor property:
+                        sun.material.diffuseColor = new BABYLON.Color3(0,0,0); // color object
 
-                //The diffuse is the native color of the object material once it is lit with a light. You can specify a solid color with the diffuseColor property:
-                sun.material.diffuseColor = new BABYLON.Color3(0,0,0); // color object
+                        //The specular is the color produced by a light reflecting from a surface. You can specify a solid color with the specularColor property:
+                        sun.material.specularColor = new BABYLON.Color3(0,0,0);
 
-                //The specular is the color produced by a light reflecting from a surface. You can specify a solid color with the specularColor property:
-                sun.material.specularColor = new BABYLON.Color3(0,0,0);
+                        //The emissive is the color produced by the object itself. You can specify a solid color with the emissiveColor property:
+                        sun.material.emissiveColor = new BABYLON.Color3(c[0],c[1], c[2]);
 
-                //The emissive is the color produced by the object itself. You can specify a solid color with the emissiveColor property:
-                sun.material.emissiveColor = new BABYLON.Color3(c[0],c[1], c[2]);
-
-                //                    sun.position = light0.position;    
-                sun.position = new BABYLON.Vector3(stars_info[h_x_rel],stars_info[h_y_rel],stars_info[h_z_rel])
-
+                        //                    sun.position = light0.position;    
+                        sun.position = new BABYLON.Vector3(stars_info[h_x_rel],stars_info[h_y_rel],stars_info[h_z_rel])
+                }catch(err) {return;}               
+               
         }
 
         this.drawConstellationStars = function(scene)
@@ -180,7 +211,6 @@ function Constellation(name){
                    var stars_info = this.cst_stars[p]; 
                    this.drawAStars(scene,stars_info);
                 }
-
         }
 
         this.drawAllStars = function(scene)
@@ -200,8 +230,8 @@ function Constellation(name){
                     new BABYLON.Vector3(from[h_x_rel], from[h_y_rel], from[h_z_rel]),
                     new BABYLON.Vector3(to[h_x_rel], to[h_y_rel], to[h_z_rel]),
                 ], scene);   
-//                console.log(lines);     
-                this.cst_connect[i].push(lines);
+                this.cst_connect[i][2] = lines;
+
           };
         }
 

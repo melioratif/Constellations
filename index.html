@@ -99,7 +99,13 @@ var getCurrentScene  = function() {
           
        //    scene.debugLayer.show();     
 
-      var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
+ // Create an ArcRotateCamera aimed at 0,0,0, with no alpha, beta or radius, so be careful. It will look broken.
+   var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+   // Quick, let's use the setPosition() method... with a common Vector3 position, to make our camera better aimed.
+   camera.setPosition(new BABYLON.Vector3(0, 1,1));
+
+
+ //     var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
 //    var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
       camera.attachControl(canvas);  
 
@@ -125,34 +131,34 @@ var getCurrentScene  = function() {
                 if (pickResult.pickedMesh == null){ti.innerHTML ="";return;};                
                 name =pickResult.pickedMesh.name;
                 if (! name.startsWith("SP")) {ti.innerHTML ="";return;};
-                
-                
                 ti.innerHTML = CONSTELLATIONS.get(name.split(":")[2]).getHTMLInfo(name.split(":")[1]);
 
         });
 
      window.addEventListener("keydown", function (evt) {
-    // Press space key to fire
-            if (evt.keyCode === 32) {
-                var cur= CONSTELLATIONS.currentCst;
-                if (cur =="")
-                        {
-                           cur="UMa";
-                        }
-                else
-                        {
-                          var f = Object.keys(CONSTELLATIONS.getAll()).sort().filter(function (value, index, self) {  return self.indexOf(value) === index;});
-                          var i = -1;
-                          for(i = -1; i <f.length; i++){if(f[i]===cur){break;}}
-                          
-                          if (i == -1 || i == f.length-2) cur =  f[0];
-                          else  cur = f[i+1];
-                        }        
-                 console.log("cur",cur);
-                cameraOn(cur);
-                CONSTELLATIONS.currentCst = cur;
+            var s = (new Date()).getTime();console.log("start KeyPressed", s);
+            console.log("mesh len:",getCurrentScene().meshes.length)
 
+            if (evt.keyCode == 32) {
+                  var cur= CONSTELLATIONS.currentCst;
+                  var f = Object.keys(CONSTELLATIONS.getAll()).sort().filter(function (value, index, self) {  return self.indexOf(value) === index;});
+                  var i = -1;
+                  for(i = -1; i <f.length; i++){if(f[i]===cur){break;}}                  
+                  if (i == -1 || i == f.length-2) cur =  f[0];
+                  else  cur = f[i+1];
+                  CONSTELLATIONS.currentCst = cur;
+                  CONSTELLATIONS.redrawAllWithOptions();
+                  cameraOn(cur);
             }
+            else{
+                     var cur= CONSTELLATIONS.currentCst;
+                     console.log("cur:",cur);
+ 
+               }
+
+            console.log("mesh len:",getCurrentScene().meshes.length)
+            var s = (new Date()).getTime()-s;console.log("end keyPressed", s);
+
 });
 
         _scene = scene;        
@@ -160,29 +166,6 @@ var getCurrentScene  = function() {
 
 }
 
-
-var drawAllStars=function(scene){
-        for (key in  CONSTELLATIONS.getAll()){
-                var cons = CONSTELLATIONS.get(key);
-                cons.drawAllStars(scene);
-        }
-}
-
-
-var drawConstellationsStars=function(scene){
-        for (key in  CONSTELLATIONS.getAll()){
-                var cons = CONSTELLATIONS.get(key);
-                cons.drawConstellationStars(scene);
-        }
-}
-
-var drawConstellationsConnexion=function(scene){
-        for (key in  CONSTELLATIONS.getAll()){
-                var cons = CONSTELLATIONS.get(key);
-                cons.drawConstellationConnexion(scene);
-        }
-
-}
 
 
 //https://www.babylonjs.com/demos/lens/
@@ -197,10 +180,8 @@ var init = function() {
         CONSTELLATIONS.init();        
         constructMenu();
 
-       var scene = getCurrentScene();
-       drawConstellationsStars(scene);
-       drawConstellationsConnexion(scene);
-//       dsrawStarsFromADataSet(scene,all_hyg_data,["UMa"]);
+        CONSTELLATIONS.redrawAllWithOptions();
+        cameraOn(CONSTELLATIONS.currentCst);
 
 }
 
@@ -212,14 +193,9 @@ var init = function() {
     <input type="text" placeholder="Search.." id="myInputview"><br>
   </div>
 
-
-<!--<button id="buttonselect"  class="dropbtn">Toogle All Stars</button>-->
-<!--  <div id="selectDrop" class="dropdown-content" style="overflow-y: scroll">
-    <input type="text" placeholder="Search.." id="myInputselect"><br>
-  </div>-->
-
 <button id="buttongobackhome"  class="dropbtn">Go Back Home</button>
 <button id="buttonstars"  class="dropbtn">Show All Stars</button>
+<button id="buttononeconst"  class="dropbtn">Set One Constellation Mode</button>
 
 
 <div id="textinformation" style="position:fixed; top:10px; left:50%; color:white"></div>

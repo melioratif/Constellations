@@ -10,7 +10,7 @@ function DiagramHR(){
                 var a = this.color[spect[0]]; // we take the first letter for the color.
                  if (a == null)
                  {
-                         console.log(   "[FILE : diagramHR][getSpectrumClass] Impossible to find the spectrum Class for the spect : "+ spect);
+                  //       console.log(   "[FILE : diagramHR][getSpectrumClass] Impossible to find the spectrum Class for the spect : "+ spect);
                         return undefined; 
                  }
                 return a;
@@ -81,14 +81,14 @@ function DiagramHR(){
                 else 
                         a = this.spectrumClass[spect[0]];
                 if (a == null)
-                   {  a = this.spectrumClass["A0"];
-                     console.log(spect);            } 
+                   {                         
+                        return undefined; 
+                   } 
 
-           //             throw "[FILE : diagramHR][getSpectrumClass] Impossible to find the spectrum Class for the spect : "+ spect;
                 return a;
                 }
 
-        this.getRadius=function(spect){return this.getSpectrumClass(spect)[1];}
+        this.getRadius=function(spect){try{ return this.getSpectrumClass(spect)[1];} catch(err) {throw "error, undefined spect;"}}
         this.getMass=function(spect){return this.getSpectrumClass(spect)[0];}
 
         this.spectrumClass = {
@@ -118,7 +118,8 @@ function DiagramHR(){
                         "G"  :[0.925,1.055],
                         "K"  :[0.65,0.83],
                         "M"  :[0.285,0.7],
-                        "C"  :[1.1,385],
+//                        "C"  :[1.1,385], // this is bizarre ?? 385 ??
+                        "C"  :[1.1,1.1],
                         "S"  :[0.8,0.7],
                         "L"  :[0.2625,0.2],
                         "T"  :[37.506,0.2],
