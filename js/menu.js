@@ -38,6 +38,22 @@ var constructMenu = function()
                                 CONSTELLATIONS.redrawAllWithOptions();
                                 }, false);
 
+        document.getElementById("buttoncamera").addEventListener("click", function() 
+                                {
+
+                                if (document.getElementById("buttoncamera").textContent === "Free Camera")
+                                        {
+                                                getCurrentScene().setActiveCameraByName("FreeCamera");
+                                                document.getElementById("buttoncamera").textContent = "Rotate Camera"
+                                        }
+                                else    
+                                        {
+                                                getCurrentScene().setActiveCameraByName("ArcRotateCamera");
+                                                document.getElementById("buttoncamera").textContent = "Free Camera"
+                                        }
+                                }, false);
+
+
 
 
 
@@ -112,30 +128,13 @@ function filterFunction(idm,inputid) {
 
 var cameraOn=function(cstname)
         {
-                stars = CONSTELLATIONS.get(cstname).cst_stars;
+                stars = CONSTELLATIONS.get(cstname).getStatInfo();
 
-                var ti = document.getElementById("textinformation");             
-                ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
-
-                var x=0,y=0,z=0;
-                var min_dist= stars[0][h_dist_rel];        
-                var max_dist= 0;        
-                for(var i = 0; i < stars.length; i++)
-                {       
-                        x+= stars[i][h_x_rel];
-                        y+= stars[i][h_y_rel];
-                        z+= stars[i][h_z_rel];
-                        if(min_dist > stars[i][h_dist_rel])min_dist = stars[i][h_dist_rel];
-                        if(max_dist < stars[i][h_dist_rel])max_dist = stars[i][h_dist_rel];
-                }
-                x= x/stars.length;
-                y= y/stars.length;
-                z= z/stars.length;
+//                var ti = document.getElementById("textinformation");             
+//                ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
                 
-                
-                getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(x,y,z));
+                getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"],stars["mid_y"],stars["mid_z"]));
                 getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0,0,0));
-//                getCurrentScene().activeCamera.radius = (max_dist+min_dist)/2;
 
                 for (key in  CONSTELLATIONS.getAll()){
                       var cons = CONSTELLATIONS.get(key);
@@ -146,6 +145,6 @@ var cameraOn=function(cstname)
                 document.getElementById("renderCanvas").focus();
                 document.getElementById("viewDrop").classList.remove("show");
 
-                var ti = document.getElementById("textinformation");             
-                ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
+  //              var ti = document.getElementById("textinformation");             
+  //              ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
                 }

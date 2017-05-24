@@ -3,6 +3,8 @@
 //http://www.handprint.com/ASTRO/specclass.html
 
 
+
+//================================================================
 function DiagramHR(){
 
 

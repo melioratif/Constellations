@@ -79,13 +79,11 @@
 var _scene = null;
 var cube_stars = 5000; // all stars will be inside a cube of cube_stars.
 var SIZE_OF_THE_SUN = 2  // size of the sun.
+
 //GLOBAL CLASS
 var RAW_DATA;
 var CONSTELLATIONS;
 var DIAGRAM_HR;
-
-//git test
-
 
 
 var getCurrentScene  = function() {
@@ -99,20 +97,22 @@ var getCurrentScene  = function() {
           
        //    scene.debugLayer.show();     
 
- // Create an ArcRotateCamera aimed at 0,0,0, with no alpha, beta or radius, so be careful. It will look broken.
-   var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
-   // Quick, let's use the setPosition() method... with a common Vector3 position, to make our camera better aimed.
-   camera.setPosition(new BABYLON.Vector3(0, 1,1));
+     var camera1 = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+     camera1.setPosition(new BABYLON.Vector3(0, 1,1));
+     camera1.attachControl(canvas);  
 
+     var light0 = new BABYLON.PointLight("mainLight", new BABYLON.Vector3(0,0,0), scene);
+     light0.parent = camera1;
+  
+     var camera2 = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
+     var light2 = new BABYLON.PointLight("mainLight2", new BABYLON.Vector3(0,0,0), scene);
+     light2.parent = camera2;
+     camera2.attachControl(canvas);  
 
- //     var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 0,0), scene);
-//    var camera = new BABYLON.TargetCamera("TargetCamera", new BABYLON.Vector3(0, 0, 0), scene);
-      camera.attachControl(canvas);  
+     scene.setActiveCameraByName("ArcRotateCamera");
+//     scene.activeCamera.noRotationConstraint=true;
 
-      var light0 = new BABYLON.PointLight("mainLight", new BABYLON.Vector3(0,0,0), scene);
-      light0.parent = camera;
-      //  camera.noRotationConstraint=true;
-      scene.activeCamera = camera;
+//      scene.activeCamera = camera;
        
       engine.runRenderLoop(function () {
          scene.render();
@@ -136,9 +136,7 @@ var getCurrentScene  = function() {
         });
 
      window.addEventListener("keydown", function (evt) {
-            var s = (new Date()).getTime();console.log("start KeyPressed", s);
-            console.log("mesh len:",getCurrentScene().meshes.length)
-
+         
             if (evt.keyCode == 32) {
                   var cur= CONSTELLATIONS.currentCst;
                   var f = Object.keys(CONSTELLATIONS.getAll()).sort().filter(function (value, index, self) {  return self.indexOf(value) === index;});
@@ -151,13 +149,10 @@ var getCurrentScene  = function() {
                   cameraOn(cur);
             }
             else{
-                     var cur= CONSTELLATIONS.currentCst;
-                     console.log("cur:",cur);
- 
+                     var cur= CONSTELLATIONS.currentCst; 
                }
 
-            console.log("mesh len:",getCurrentScene().meshes.length)
-            var s = (new Date()).getTime()-s;console.log("end keyPressed", s);
+         
 
 });
 
@@ -196,6 +191,7 @@ var init = function() {
 <button id="buttongobackhome"  class="dropbtn">Go Back Home</button>
 <button id="buttonstars"  class="dropbtn">Show All Stars</button>
 <button id="buttononeconst"  class="dropbtn">Set One Constellation Mode</button>
+<button id="buttoncamera"  class="dropbtn">Free Camera</button>
 
 
 <div id="textinformation" style="position:fixed; top:10px; left:50%; color:white"></div>

@@ -7,12 +7,25 @@ function ConstellationsManager(rdata){
 
         this.oneConstellationMode = false; // 0 means all constellation, 1 mean only one is showed
         this.showAllStars =  false;
-
+        this.drawEa = true;
         this.rawdata = rdata;
         this.currentCst = "UMa";
         
         this.getAll= function(){return this.constellationsArray;}
         this.get= function(cstname){return this.constellationsArray[cstname];}
+
+        this.setCurrentToColor=function(){this.get(this.currentCst).ConnexionToColor();}
+
+        this.setdrawAlsoEarth=function (ea){
+                this.drawEarth = ea;
+        }
+
+        this.drawAlsoEarth = function(){
+                 var scene= getCurrentScene();
+                var box = BABYLON.MeshBuilder.CreateBox("box", {height: 5,width:5, faceColors: new BABYLON.Color3(0,0, 1)}, scene);
+                box.position= new BABYLON.Vector3(0,0,0);
+        }
+
 
         this.redrawAllWithOptions=function()
         {
@@ -40,6 +53,9 @@ function ConstellationsManager(rdata){
                  }
         
             }
+        this.setCurrentToColor();
+        if (this.drawEa == true){this.drawAlsoEarth();}
+
         }
 
         this.findByHyg = function(hyg)
@@ -119,8 +135,8 @@ function ConstellationsManager(rdata){
 function Constellation(name){
         this.fullname = "";
         this.shortname = name;
-        this.farest_stars = 0;
-        this.middle_stars = 0;
+        this.infostat = {};
+//        this.middle_stars = 0;
         this.all_stars = [];
         this.cst_stars = [];
         this.cst_connect = [];
@@ -135,7 +151,6 @@ function Constellation(name){
 
         this.ConnexionToColor = function()
         {
-         console.log("Connexion to Color");
          this.setToColor(new BABYLON.Color3(1,0,0));
        }
 
@@ -166,9 +181,9 @@ function Constellation(name){
                  "dist:"+ (stars[h_dist]*3262) +"&emsp;" +
                  "absMag :"+ stars[h_absmag]+"<br>"+
 
-                  "sp_name :" +DIAGRAM_HR.getName(stars[h_spect])    +"&emsp;" +
-                  "sp_radius :" +DIAGRAM_HR.getRadius(stars[h_spect])+"&emsp;" +
-                  "sp_mass :" +DIAGRAM_HR.getMass(stars[h_spect])    +"<br>";
+                 "sp_name :" +DIAGRAM_HR.getName(stars[h_spect])    +"&emsp;" +
+                 "sp_radius :" +DIAGRAM_HR.getRadius(stars[h_spect])+"&emsp;" +
+                 "sp_mass :" +DIAGRAM_HR.getMass(stars[h_spect])    +"<br>";
 
         }
 
@@ -234,6 +249,31 @@ function Constellation(name){
 
           };
         }
+
+
+        this.getStatInfo=function()
+        {
+                if(this.statinfo  != null) return this.statinfo;
+
+                var x=0,y=0,z=0;
+                var min_dist= this.cst_stars[0][h_dist_rel];        
+                var max_dist= 0;        
+                for(var i = 0; i < this.cst_stars.length; i++)
+                {       
+                        x+= this.cst_stars[i][h_x_rel];
+                        y+= this.cst_stars[i][h_y_rel];
+                        z+= this.cst_stars[i][h_z_rel];
+                        if(min_dist > this.cst_stars[i][h_dist_rel])min_dist = this.cst_stars[i][h_dist_rel];
+                        if(max_dist < this.cst_stars[i][h_dist_rel])max_dist = this.cst_stars[i][h_dist_rel];
+                }
+                x= x/this.cst_stars.length;
+                y= y/this.cst_stars.length;
+                z= z/this.cst_stars.length;
+
+                this.statinfo =  {"mid_x":x,"mid_y":y,"mid_z":z,"min_dist":min_dist,"max_dist":max_dist};
+                return this.statinfo;
+        }
+
 
 }
 
