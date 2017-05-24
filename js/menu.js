@@ -129,10 +129,7 @@ function filterFunction(idm,inputid) {
 var cameraOn=function(cstname)
         {
                 stars = CONSTELLATIONS.get(cstname).getStatInfo();
-
-//                var ti = document.getElementById("textinformation");             
-//                ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
-                
+              
                 getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"],stars["mid_y"],stars["mid_z"]));
                 getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0,0,0));
 
@@ -144,7 +141,4 @@ var cameraOn=function(cstname)
                 CONSTELLATIONS.get(cstname).ConnexionToColor();
                 document.getElementById("renderCanvas").focus();
                 document.getElementById("viewDrop").classList.remove("show");
-
-  //              var ti = document.getElementById("textinformation");             
-  //              ti.innerHTML = "Camera Pos:"+getCurrentScene().activeCamera.position; 
-                }
+         }

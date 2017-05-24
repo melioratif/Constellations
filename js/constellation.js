@@ -7,7 +7,7 @@ function ConstellationsManager(rdata){
 
         this.oneConstellationMode = false; // 0 means all constellation, 1 mean only one is showed
         this.showAllStars =  false;
-        this.drawEa = true;
+        this.drawSun = true;
         this.rawdata = rdata;
         this.currentCst = "UMa";
         
@@ -20,10 +20,30 @@ function ConstellationsManager(rdata){
                 this.drawEarth = ea;
         }
 
-        this.drawAlsoEarth = function(){
+        this.drawAlsoSun = function(){
                  var scene= getCurrentScene();
-                var box = BABYLON.MeshBuilder.CreateBox("box", {height: 5,width:5, faceColors: new BABYLON.Color3(0,0, 1)}, scene);
-                box.position= new BABYLON.Vector3(0,0,0);
+                 var sun = BABYLON.Mesh.CreateSphere("SUN", 10, SIZE_OF_THE_SUN*2, scene); 
+                 sun.material = new BABYLON.StandardMaterial("sunmat", scene);
+                 sun.material.specularColor = new BABYLON.Color3(0, 0, 0);
+                 sun.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+                 sun.material.emissiveColor = new BABYLON.Color3(0,1,1);
+                 sun.position= new BABYLON.Vector3(0,0,0);
+                
+                var background = BABYLON.MeshBuilder.CreatePlane("background", { width: 2, height: 2 }, scene, true);
+                background.alpha = 0;
+                background.material = new BABYLON.StandardMaterial("bck", scene);
+                background.position = new BABYLON.Vector3(0,SIZE_OF_THE_SUN*1,0);
+
+                background.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+                background.material.diffuseTexture = new BABYLON.DynamicTexture("bck", 512, scene, false);
+//                background.material.alpha = 0.5;
+                background.material.specularColor = new BABYLON.Color3(0, 0, 0);
+                background.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+                background.material.emissiveColor = new BABYLON.Color3(0,1,1);
+           //     background.material.backFaceCulling = false;
+
+                background.material.diffuseTexture.drawText("SUN", 0, 200, "bold 200px Segoe UI", "white", "#555555");
+
         }
 
 
@@ -54,7 +74,7 @@ function ConstellationsManager(rdata){
         
             }
         this.setCurrentToColor();
-        if (this.drawEa == true){this.drawAlsoEarth();}
+        if (this.drawSun == true){this.drawAlsoSun();}
 
         }
 
