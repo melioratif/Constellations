@@ -77,8 +77,8 @@
  <script type="text/javascript">
 
 var _scene = null;
-var cube_stars = 5000; // all stars will be inside a cube of cube_stars.
-var SIZE_OF_THE_SUN = 2  // size of the sun.
+var cube_stars = 1000000; // all stars will be inside a cube of cube_stars.
+var SIZE_OF_THE_SUN = 1  // size of the sun.
 
 //GLOBAL CLASS
 var RAW_DATA;
@@ -110,12 +110,15 @@ var getCurrentScene  = function() {
      camera2.attachControl(canvas);  
 
      scene.setActiveCameraByName("ArcRotateCamera");
-//     scene.activeCamera.noRotationConstraint=true;
+//     scene.activeCamera.noRotationConstraint=;
 
 //      scene.activeCamera = camera;
        
       engine.runRenderLoop(function () {
          scene.render();
+
+
+
       });
 
       window.addEventListener("resize", function () {
@@ -170,13 +173,20 @@ var init = function() {
         RAW_DATA= new RawData();
         DIAGRAM_HR = new DiagramHR();
         CONSTELLATIONS = new ConstellationsManager(RAW_DATA);
-
         RAW_DATA.init();
+
         CONSTELLATIONS.init();        
         constructMenu();
 
         CONSTELLATIONS.redrawAllWithOptions();
         cameraOn(CONSTELLATIONS.currentCst);
+
+console.log(RAW_DATA.farest_distance);
+console.log(RAW_DATA.farest_x);
+console.log(RAW_DATA.farest_y);
+console.log(RAW_DATA.farest_z);
+console.log(RAW_DATA.middle_distance);
+        
 
 }
 
@@ -190,7 +200,7 @@ var init = function() {
 
 <button id="buttongobackhome"  class="dropbtn">Go Back Home</button>
 <button id="buttonstars"  class="dropbtn">Show All Stars</button>
-<button id="buttononeconst"  class="dropbtn">Set One Constellation Mode</button>
+<button id="buttononeconst"  class="dropbtn">Show current Constellation</button>
 <button id="buttoncamera"  class="dropbtn">Free Camera</button>
 
 

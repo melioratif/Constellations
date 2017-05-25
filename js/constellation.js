@@ -22,17 +22,17 @@ function ConstellationsManager(rdata){
 
         this.drawAlsoSun = function(){
                  var scene= getCurrentScene();
-                 var sun = BABYLON.Mesh.CreateSphere("SUN", 10, SIZE_OF_THE_SUN*2, scene); 
+                 var sun = BABYLON.Mesh.CreateSphere("SUN", 10, SIZE_OF_THE_SUN, scene); 
                  sun.material = new BABYLON.StandardMaterial("sunmat", scene);
                  sun.material.specularColor = new BABYLON.Color3(0, 0, 0);
                  sun.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
                  sun.material.emissiveColor = new BABYLON.Color3(0,1,1);
                  sun.position= new BABYLON.Vector3(0,0,0);
                 
-                var background = BABYLON.MeshBuilder.CreatePlane("background", { width: 2, height: 2 }, scene, true);
+                var background = BABYLON.MeshBuilder.CreatePlane("background", { width: SIZE_OF_THE_SUN, height: SIZE_OF_THE_SUN }, scene, true);
                 background.alpha = 0;
                 background.material = new BABYLON.StandardMaterial("bck", scene);
-                background.position = new BABYLON.Vector3(0,SIZE_OF_THE_SUN*1,0);
+                background.position = new BABYLON.Vector3(0,SIZE_OF_THE_SUN/2,0);
 
                 background.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
                 background.material.diffuseTexture = new BABYLON.DynamicTexture("bck", 512, scene, false);
@@ -74,6 +74,7 @@ function ConstellationsManager(rdata){
         
             }
         this.setCurrentToColor();
+
         if (this.drawSun == true){this.drawAlsoSun();}
 
         }
@@ -190,7 +191,7 @@ function Constellation(name){
         var stars = this.find(hipnb);
         return   "const :"+ stars[h_con] +"&emsp;"    + 
                 "x-rel,y-rel,z-rel:"+ stars[h_x_rel] +","+stars[h_y_rel]+","+stars[h_z_rel]+"&emsp;" + 
-                "x,y,z:"+ stars[h_x] +","+stars[h_y]+","+stars[h_z]+"&emsp;"+ 
+                "x,y,z:"+ (stars[h_x]*3.262).toFixed(2) +","+(stars[h_y]*3.262).toFixed(2)+","+(stars[h_z]*3.262).toFixed(2)+"&emsp;"+ 
                 "spect :"+ stars[h_spect]+"&emsp;"    + 
                 "bf :"+ stars[h_bf]+"<br>"+
 
@@ -198,7 +199,7 @@ function Constellation(name){
                  "hyg  :" + stars[h_hip] +"&emsp;"    + 
                  "name:"+ stars[h_proper] +"&emsp;"+  
                  "dist-rel:"+ stars[h_dist_rel] + "&emsp;"+  
-                 "dist:"+ (stars[h_dist]*3262) +"&emsp;" +
+                 "dist:"+ (stars[h_dist]*3.262).toFixed(2) +" al &emsp;" +
                  "absMag :"+ stars[h_absmag]+"<br>"+
 
                  "sp_name :" +DIAGRAM_HR.getName(stars[h_spect])    +"&emsp;" +
@@ -218,25 +219,17 @@ function Constellation(name){
 
         this.drawAStars = function(scene, stars_info)
         {
-//                var light0 = new BABYLON.PointLight("LI:"+stars_info[h_hip], , scene);
                 try  {              
                         var sun = BABYLON.Mesh.CreateSphere("SP:"+stars_info[h_hip]+":"+stars_info[h_con], 10, SIZE_OF_THE_SUN*DIAGRAM_HR.getRadius(stars_info[h_spect]), scene); 
                         sun.material = new BABYLON.StandardMaterial("SM:"+stars_info[h_hip], scene);
 
                         var c = DIAGRAM_HR.getColor(stars_info[h_spect]);
-
-                        //The diffuse is the native color of the object material once it is lit with a light. You can specify a solid color with the diffuseColor property:
                         sun.material.diffuseColor = new BABYLON.Color3(0,0,0); // color object
-
-                        //The specular is the color produced by a light reflecting from a surface. You can specify a solid color with the specularColor property:
                         sun.material.specularColor = new BABYLON.Color3(0,0,0);
-
-                        //The emissive is the color produced by the object itself. You can specify a solid color with the emissiveColor property:
                         sun.material.emissiveColor = new BABYLON.Color3(c[0],c[1], c[2]);
-
-                        //                    sun.position = light0.position;    
                         sun.position = new BABYLON.Vector3(stars_info[h_x_rel],stars_info[h_y_rel],stars_info[h_z_rel])
-                }catch(err) {return;}               
+                }catch(err) {
+                        return;}               
                
         }
 

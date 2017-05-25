@@ -1,10 +1,14 @@
 
 var constructMenu = function()
 {      
-        document.getElementById("buttonview").addEventListener("click", function() {myF("viewDrop");}, false);
+        document.getElementById("buttonview").addEventListener("click", function() {
+                  document.getElementById("viewDrop").classList.toggle("show");
+                  document.getElementById("viewDrop").getElementsByTagName("input")[0].focus();
+                }, false);
+
+
+
         document.getElementById("buttonstars").addEventListener("click", function() {
-
-
                         if (document.getElementById("buttonstars").textContent === "Show All Stars"){
                                 if(CONSTELLATIONS.oneConstellationMode == false && !confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) return; 
                                 document.getElementById("buttonstars").textContent = "Hide All Stars";
@@ -23,16 +27,17 @@ var constructMenu = function()
         document.getElementById("buttononeconst").addEventListener("click", function() 
                                 {
 
-                                if (document.getElementById("buttononeconst").textContent === "Set One Constellation Mode")
+                                if (document.getElementById("buttononeconst").textContent === "Show current Constellation")
                                         {
                                         if (CONSTELLATIONS.showAllStars)
                                                 if(!confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) return; 
-                                        document.getElementById("buttononeconst").textContent = "Set All Constellation Mode"
+                                        document.getElementById("buttononeconst").textContent = "Set All Constellation"
                                         CONSTELLATIONS.oneConstellationMode =  true;                               
+                                        cameraOn(CONSTELLATIONS.currentCst);
                                         }
                                 else    
                                         {
-                                                document.getElementById("buttononeconst").textContent = "Set One Constellation Mode"
+                                                document.getElementById("buttononeconst").textContent = "Show current Constellation"
                                                 CONSTELLATIONS.oneConstellationMode = false;                                
                                         }
                                 CONSTELLATIONS.redrawAllWithOptions();
@@ -54,14 +59,16 @@ var constructMenu = function()
                                 }, false);
 
 
-
-
-
-
-
         document.getElementById("buttongobackhome").addEventListener("click", function() 
                                         {
-                                            cameraOn(CONSTELLATIONS.currentCst);    
+                                        console.log(getCurrentScene().activeCamera );
+                                            if(getCurrentScene().activeCamera.name == "ArcRotateCamera"){
+                                                        getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0,0,0));
+                                            }else{
+                                                        getCurrentScene().activeCamera.position =new BABYLON.Vector3(0,0,0);
+                                                        stars = CONSTELLATIONS.get(CONSTELLATIONS.currentCst).getStatInfo();
+                                                        getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"]/2,stars["mid_y"]/2,stars["mid_z"]/2));
+                                                }  
                                             document.getElementById("renderCanvas").focus();
                                         },false);
 
@@ -84,7 +91,12 @@ var constructMenu = function()
                 btelem.type = "button";
                 btelem.className = "dropbtn";
                 btelem.textContent = constel.fullname+"("+constel.cst_stars.length+")";
-                btelem.onclick = function(j) { return function() { cameraOn(j); }; }(constel.shortname);
+                btelem.onclick = function(j) { return function() {
+                        CONSTELLATIONS.currentCst = j;
+                        CONSTELLATIONS.redrawAllWithOptions();
+                         cameraOn(j);
+                         document.getElementById("buttongobackhome").click();
+                         }; }(constel.shortname);
 
                 
                 divelem.appendChild(btelem);
@@ -96,16 +108,7 @@ var constructMenu = function()
                 canvas.addEventListener("click", function () {
                         document.getElementById("viewDrop").classList.remove("show");
                 });
-
-
-
 }
-
-function myF(mId) {
-             document.getElementById(mId).classList.toggle("show");
-            document.getElementById(mId).getElementsByTagName("input")[0].focus();
-            CONSTELLATIONS.currentCst = mID;    
-        }
 
 function filterFunction(idm,inputid) {
             var input = document.getElementById(inputid);
@@ -126,13 +129,18 @@ function filterFunction(idm,inputid) {
 
         }
 
+
 var cameraOn=function(cstname)
         {
                 stars = CONSTELLATIONS.get(cstname).getStatInfo();
               
-                getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"],stars["mid_y"],stars["mid_z"]));
-                getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0,0,0));
-
+                getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"]/2,stars["mid_y"]/2,stars["mid_z"]/2));
+                console.log(CONSTELLATIONS.oneConstellationMode);
+                if(CONSTELLATIONS.oneConstellationMode == true){
+                        getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(stars["max_dist"]/2,0,0));
+                }else{
+                        getCurrentScene().activeCamera.position =new BABYLON.Vector3(0,0,0);
+                }
                 for (key in  CONSTELLATIONS.getAll()){
                       var cons = CONSTELLATIONS.get(key);
                       cons.resetConnexionColor();
