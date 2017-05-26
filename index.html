@@ -119,6 +119,8 @@ var getCurrentScene  = function() {
         if(rotatecamera)
                 {
                  scene.activeCamera.alpha += 0.01;
+                 
+
                 }
 
       });
@@ -142,18 +144,21 @@ var getCurrentScene  = function() {
 
      window.addEventListener("keydown", function (evt) {
          
-            if (evt.keyCode == 32) {
+            if (evt.keyCode == 32 || evt.keyCode == 8) {
                   var ti = document.getElementById("textinformation");             
                   var cur= CONSTELLATIONS.currentCst;
                   var f = Object.keys(CONSTELLATIONS.getAll()).sort().filter(function (value, index, self) {  return self.indexOf(value) === index;});
                   var i = -1;
                   for(i = -1; i <f.length; i++){if(f[i]===cur){break;}}                  
+                  
                   if (i == -1 || i == f.length-2) cur =  f[0];
-                  else  cur = f[i+1];
+                  else if(evt.keyCode ==32) cur = f[i+1];
+                  else if(evt.keyCode == 8) cur = f[i-1];
                   CONSTELLATIONS.currentCst = cur;
                   CONSTELLATIONS.redrawAllWithOptions();
-                  cameraOn(cur);                
-                  ti.innerHTML = CONSTELLATIONS.get(CONSTELLATIONS.currentCst).fullname+" ("+ CONSTELLATIONS.get(CONSTELLATIONS.currentCst).getStarsLength()+')';
+                  cameraOn(cur);               
+                  var cst = CONSTELLATIONS.get(CONSTELLATIONS.currentCst); 
+                  ti.innerHTML = cst.fullname+" ("+cst.shortname+" "+cst.getStarsLength()+')';
                   
             }
             else{
@@ -169,6 +174,34 @@ var getCurrentScene  = function() {
 
 }
 
+var query_string = null;
+
+//here https://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-get-parameters
+var QueryString = function () {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+        
+  if (query_string != null) return query_string;
+  
+  query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+        // If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = decodeURIComponent(pair[1]);
+        // If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+      query_string[pair[0]] = arr;
+        // If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(decodeURIComponent(pair[1]));
+    }
+  } 
+  return query_string;
+}();
 
 
 //https://www.babylonjs.com/demos/lens/
@@ -178,19 +211,28 @@ var init = function() {
         RAW_DATA= new RawData();
         DIAGRAM_HR = new DiagramHR();
         CONSTELLATIONS = new ConstellationsManager(RAW_DATA);
-        RAW_DATA.init();
 
+
+        RAW_DATA.init();
         CONSTELLATIONS.init();        
         constructMenu();
 
+        
         CONSTELLATIONS.redrawAllWithOptions();
         cameraOn(CONSTELLATIONS.currentCst);
 
-console.log(RAW_DATA.farest_distance);
-console.log(RAW_DATA.farest_x);
-console.log(RAW_DATA.farest_y);
-console.log(RAW_DATA.farest_z);
-console.log(RAW_DATA.middle_distance);
+        if (QueryString["const"] != null && QueryString["const"] in CONSTELLATIONS.getAll()) CONSTELLATIONS.currentCst = QueryString["const"];        
+        if (QueryString["cam"] != null && QueryString["cam"] == "free" ) document.getElementById("buttoncamera").click();        
+        if (QueryString["alone"] != null && QueryString["alone"] == "yes" ) document.getElementById("buttononeconst").click();        
+        if (QueryString["rotate"] != null && QueryString["alone"] == "yes" ) document.getElementById("buttonrotate").click();        
+        if (QueryString["show"] != null && QueryString["show"] == "all" ) document.getElementById("buttonstars").click();        
+
+
+        console.log(RAW_DATA.farest_distance);
+        console.log(RAW_DATA.farest_x);
+        console.log(RAW_DATA.farest_y);
+        console.log(RAW_DATA.farest_z);
+        console.log(RAW_DATA.middle_distance);
         
 
 }
@@ -209,9 +251,11 @@ console.log(RAW_DATA.middle_distance);
 <button id="buttoncamera"  class="dropbtn">Free Camera</button>
 <button id="buttonrotate"  class="dropbtn">AutoRotation(start/stop)</button>
 
-<div id="textinformation" style="position:fixed; top:10px; left:60%; color:white"></div>
+<div id="textinformation" style="position:fixed; top:50px; left:60%; color:white"></div>
 
-<a class="dropbtn" href="https://github.com/melioratif/Constellations">?</a>
+<a class="dropbtn" href="https://github.com/melioratif/Constellations">help</a>
+
+<a class="dropbtn" href="https://melioratif.net">mélioratif.net</a>
 
 
 <canvas id="renderCanvas"></canvas>

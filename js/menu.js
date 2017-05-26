@@ -72,7 +72,6 @@ var constructMenu = function()
 
         document.getElementById("buttongobackhome").addEventListener("click", function() 
                                         {
-                                        console.log(getCurrentScene().activeCamera );
                                             if(getCurrentScene().activeCamera.name == "ArcRotateCamera"){
                                                         getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0,0,0));
                                             }else{
@@ -146,7 +145,7 @@ var cameraOn=function(cstname)
                 stars = CONSTELLATIONS.get(cstname).getStatInfo();
 
                 getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"]/2,stars["mid_y"]/2,stars["mid_z"]/2));
-                if(CONSTELLATIONS.oneConstellationMode == true){
+                if(getCurrentScene().activeCamera.name == "ArcRotateCamera"){
                         getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(stars["max_dist"]/2,0,0));
                 }else{
                         getCurrentScene().activeCamera.position =new BABYLON.Vector3(0,0,0);
