@@ -78,13 +78,14 @@
 
 var _scene = null;
 var cube_stars = 1000000; // all stars will be inside a cube of cube_stars.
+var rotatecamera = false;
+
 var SIZE_OF_THE_SUN = 1  // size of the sun.
 
 //GLOBAL CLASS
 var RAW_DATA;
 var CONSTELLATIONS;
 var DIAGRAM_HR;
-
 
 var getCurrentScene  = function() {
 
@@ -113,11 +114,12 @@ var getCurrentScene  = function() {
 //     scene.activeCamera.noRotationConstraint=;
 
 //      scene.activeCamera = camera;
-       
       engine.runRenderLoop(function () {
          scene.render();
-
-
+        if(rotatecamera)
+                {
+                 scene.activeCamera.alpha += 0.01;
+                }
 
       });
 
@@ -141,6 +143,7 @@ var getCurrentScene  = function() {
      window.addEventListener("keydown", function (evt) {
          
             if (evt.keyCode == 32) {
+                  var ti = document.getElementById("textinformation");             
                   var cur= CONSTELLATIONS.currentCst;
                   var f = Object.keys(CONSTELLATIONS.getAll()).sort().filter(function (value, index, self) {  return self.indexOf(value) === index;});
                   var i = -1;
@@ -149,7 +152,9 @@ var getCurrentScene  = function() {
                   else  cur = f[i+1];
                   CONSTELLATIONS.currentCst = cur;
                   CONSTELLATIONS.redrawAllWithOptions();
-                  cameraOn(cur);
+                  cameraOn(cur);                
+                  ti.innerHTML = CONSTELLATIONS.get(CONSTELLATIONS.currentCst).fullname+" ("+ CONSTELLATIONS.get(CONSTELLATIONS.currentCst).getStarsLength()+')';
+                  
             }
             else{
                      var cur= CONSTELLATIONS.currentCst; 
@@ -202,9 +207,10 @@ console.log(RAW_DATA.middle_distance);
 <button id="buttonstars"  class="dropbtn">Show All Stars</button>
 <button id="buttononeconst"  class="dropbtn">Show current Constellation</button>
 <button id="buttoncamera"  class="dropbtn">Free Camera</button>
+<button id="buttonrotate"  class="dropbtn">AutoRotation(start/stop)</button>
 
 
-<div id="textinformation" style="position:fixed; top:10px; left:50%; color:white"></div>
+<div id="textinformation" style="position:fixed; top:10px; left:60%; color:white"></div>
 <!--<div id="textinformation" style="color:white"></div>-->
 
 <canvas id="renderCanvas"></canvas>

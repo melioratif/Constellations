@@ -10,7 +10,7 @@ function ConstellationsManager(rdata){
         this.drawSun = true;
         this.rawdata = rdata;
         this.currentCst = "UMa";
-        
+
         this.getAll= function(){return this.constellationsArray;}
         this.get= function(cstname){return this.constellationsArray[cstname];}
 

@@ -7,6 +7,14 @@ var constructMenu = function()
                 }, false);
 
 
+//<button id="buttonrotate"  class="dropbtn">Start Rotation</button>
+
+      document.getElementById("buttonrotate").addEventListener("click", function() {
+                        rotatecamera = ! rotatecamera;
+                         
+                }, false);
+
+
 
         document.getElementById("buttonstars").addEventListener("click", function() {
                         if (document.getElementById("buttonstars").textContent === "Show All Stars"){
@@ -50,11 +58,14 @@ var constructMenu = function()
                                         {
                                                 getCurrentScene().setActiveCameraByName("FreeCamera");
                                                 document.getElementById("buttoncamera").textContent = "Rotate Camera"
+                                                document.getElementById("buttonrotate").style.display = "none";
+                                                rotatecamera= false;
                                         }
                                 else    
                                         {
                                                 getCurrentScene().setActiveCameraByName("ArcRotateCamera");
                                                 document.getElementById("buttoncamera").textContent = "Free Camera"
+                                                document.getElementById("buttonrotate").style.display = "";
                                         }
                                 }, false);
 
@@ -133,9 +144,8 @@ function filterFunction(idm,inputid) {
 var cameraOn=function(cstname)
         {
                 stars = CONSTELLATIONS.get(cstname).getStatInfo();
-              
+
                 getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"]/2,stars["mid_y"]/2,stars["mid_z"]/2));
-                console.log(CONSTELLATIONS.oneConstellationMode);
                 if(CONSTELLATIONS.oneConstellationMode == true){
                         getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(stars["max_dist"]/2,0,0));
                 }else{
