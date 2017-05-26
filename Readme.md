@@ -10,19 +10,59 @@ github pages -> https://melioratif.github.io/Constellations/
 # User Manuel
 
 ## Buttons
-###![The Constellation Button](/images/constellationsButton.png)
 
-###![The Go Home Button](/images/goHomeButton.png)
+### Constellations 
+![The Constellation Button](/images/constellationsButton.png)
 
-###![The Show All Button](/images/ShowAllStarsButton.png)
+All constellations are under this button. The filter can help you to find a specific one.
+Once click, the camera will automatically target on it. 
 
-###![The Show Current Button](/images/ShowCurrentConstellationButton.png)
+Remark that the camera only turn on itself to find the constellation. It will not put the camera on 0,0,0 (sun place). 
 
-###![The Free Camera Button](/images/FreeCameraButton.png)
+### Go Home
+![The Go Home Button](/images/goHomeButton.png)
 
-###![The AutoRotation button](/images/AutoRotationButton.png)
+Are you lost ? This button put the camera back at sun place 
 
-## Mouse
+### Show All Stars
+![The Show All Button](/images/ShowAllStarsButton.png)
+
+Toggle between only constellation stars and All stars from HYG database.
+If only the current constellation is showed, only stars of the constellation will be activated.
+
+WARNING : In data base, there are more than 120000 stars meaning you should have a good computer one if you activate that. 
+(My, a lenovo yoga 2, cannot do it).
+
+
+### Show Current Constellation
+![The Show Current Button](/images/ShowCurrentConstellationButton.png)
+
+Toggle between only one constellation and all. 
+
+### Free Camera
+![The Free Camera Button](/images/FreeCameraButton.png)
+
+There are 2 tape of camera:
+* One is the Free camera. Controling with UP, DOWN, RIGHT, LEFT button and the mouse. (like in a FPS)
+* The other is an Arc Rotate Camera. This camera turn around a point between the constellation and the sun. 
+
+### Auto Rotation
+![The AutoRotation button](/images/AutoRotationButton.png)
+
+If the Rotate camera is activate, this button start to turn automaticly around a point. This point is the middle distance between stars and sun. 
+The sun is always represented (see below).
+
+## KeyBoard
+
+The space bar allow to go to the next constellation. 
+
+## Representation
+
+
+### Stars
+
+### The Sun
+
 
 
 
