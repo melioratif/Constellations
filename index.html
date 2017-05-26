@@ -220,6 +220,8 @@ var init = function() {
         
         CONSTELLATIONS.redrawAllWithOptions();
         cameraOn(CONSTELLATIONS.currentCst);
+        
+        console.log(QueryString);
 
         if (QueryString["const"] != null && QueryString["const"] in CONSTELLATIONS.getAll()) CONSTELLATIONS.currentCst = QueryString["const"];        
         if (QueryString["cam"] != null && QueryString["cam"] == "free" ) document.getElementById("buttoncamera").click();        
