@@ -64,6 +64,7 @@ var constructMenu = function()
                                 else    
                                         {
                                                 getCurrentScene().setActiveCameraByName("ArcRotateCamera");
+                                                cameraOn(CONSTELLATIONS.currentCst);
                                                 document.getElementById("buttoncamera").textContent = "Free Camera"
                                                 document.getElementById("buttonrotate").style.display = "";
                                         }
@@ -146,8 +147,10 @@ var cameraOn=function(cstname)
 
                 getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"]/2,stars["mid_y"]/2,stars["mid_z"]/2));
                 if(getCurrentScene().activeCamera.name == "ArcRotateCamera"){
+                        console.log("ici");
                         getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(stars["max_dist"]/2,0,0));
                 }else{
+                        console.log("la");
                         getCurrentScene().activeCamera.position =new BABYLON.Vector3(0,0,0);
                 }
                 for (key in  CONSTELLATIONS.getAll()){

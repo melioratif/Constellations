@@ -110,7 +110,7 @@ var getCurrentScene  = function() {
      light2.parent = camera2;
      camera2.attachControl(canvas);  
 
-     scene.setActiveCameraByName("ArcRotateCamera");
+     scene.setActiveCameraByName("FreeCamera");
 //     scene.activeCamera.noRotationConstraint=;
 
 //      scene.activeCamera = camera;
@@ -250,7 +250,7 @@ var init = function() {
 <button id="buttongobackhome"  class="dropbtn">Go Back Home</button>
 <button id="buttonstars"  class="dropbtn">Show All Stars</button>
 <button id="buttononeconst"  class="dropbtn">Show current Constellation</button>
-<button id="buttoncamera"  class="dropbtn">Free Camera</button>
+<button id="buttoncamera"  class="dropbtn">Rotate Camera</button>
 <button id="buttonrotate"  class="dropbtn">AutoRotation(start/stop)</button>
 
 <div id="textinformation" style="position:fixed; top:50px; left:60%; color:white"></div>
