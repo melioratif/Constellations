@@ -223,19 +223,23 @@ var init = function() {
         
         console.log(QueryString);
 
-        if (QueryString["const"] != null && QueryString["const"] in CONSTELLATIONS.getAll()) CONSTELLATIONS.currentCst = QueryString["const"];        
+        if (QueryString["const"] != null && QueryString["const"] in CONSTELLATIONS.getAll()) CONSTELLATIONS.currentCst = QueryString["const"];    
         if (QueryString["cam"] != null && QueryString["cam"] == "rotate" ) document.getElementById("buttoncamera").click();        
         if (QueryString["alone"] != null && QueryString["alone"] == "yes" ) document.getElementById("buttononeconst").click();        
         if (QueryString["autor"] != null && QueryString["autor"] == "yes" ) document.getElementById("buttonrotate").click();        
         if (QueryString["show"] != null && QueryString["show"] == "all" ) document.getElementById("buttonstars").click();        
 
 
+        CONSTELLATIONS.redrawAllWithOptions();
+        cameraOn(CONSTELLATIONS.currentCst);
+
+/*
         console.log(RAW_DATA.farest_distance);
         console.log(RAW_DATA.farest_x);
         console.log(RAW_DATA.farest_y);
         console.log(RAW_DATA.farest_z);
         console.log(RAW_DATA.middle_distance);
-        
+*/      
 
 }
 
