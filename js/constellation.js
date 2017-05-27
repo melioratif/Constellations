@@ -36,11 +36,9 @@ function ConstellationsManager(rdata){
 
                 background.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
                 background.material.diffuseTexture = new BABYLON.DynamicTexture("bck", 512, scene, false);
-//                background.material.alpha = 0.5;
                 background.material.specularColor = new BABYLON.Color3(0, 0, 0);
                 background.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
                 background.material.emissiveColor = new BABYLON.Color3(0,1,1);
-           //     background.material.backFaceCulling = false;
 
                 background.material.diffuseTexture.drawText("SUN", 0, 200, "bold 200px Segoe UI", "white", "#555555");
 

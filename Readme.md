@@ -55,5 +55,5 @@ The sun is always represented (see below).
 
 ## KeyBoard
 
-The space bar allow to go to the next constellation. 
-
+* The tab key allow you to go to the next constellation. 
+* The shift key allow you to go to the last constellation.
