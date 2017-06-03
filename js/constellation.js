@@ -377,6 +377,7 @@ nb_star: 9
         var farest_star = this.cst_stars[0];
         
         
+        
         for (var i = 0; i < this.cst_stars.length; i++) {
             x += this.cst_stars[i][h_x_rel];
             y += this.cst_stars[i][h_y_rel];
@@ -416,6 +417,7 @@ nb_star: 9
             "farest_cst_star":farest_star
         };
         console.log(":",this.statinfo);
+        console.log(":>",this.cst_stars);
         return this.statinfo;
     };
 }
