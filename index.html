@@ -135,6 +135,11 @@
                 if (rotatecamera) {
                     scene.activeCamera.alpha += 0.01;
                 }
+                var c= getCurrentScene().activeCamera;
+                if (Math.abs(c.position.x) < 1 && Math.abs(c.position.y) < 1 && Math.abs(c.position.y) < 1)
+                    CONSTELLATIONS.unDrawSun();
+                else
+                    CONSTELLATIONS.drawAlsoSun();
             });
 
             window.addEventListener("resize", function() {

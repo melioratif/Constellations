@@ -29,7 +29,19 @@ function ConstellationsManager(rdata) {
     this.rawdata = rdata;
     this.currentCst = "UMa";
     this.mainNode = null;
-
+    this.sun = null;
+    this.sunB = null;
+    
+    this.unDrawSun= function()
+    {
+        if (this.sun  === null)return;
+        this.sun.dispose();
+        this.sunB.dispose();
+        
+        this.sun = null;
+        this.sunB= null;
+    };    
+    
     this.getAll = function () {
         return this.constellationsArray;
     };
@@ -47,34 +59,37 @@ function ConstellationsManager(rdata) {
     };
 
     this.drawAlsoSun = function () {
-        var scene = getCurrentScene(),
-            sun = BABYLON.Mesh.CreateSphere("SUN", 10, SIZE_OF_THE_SUN, scene),
-            background = BABYLON.MeshBuilder.CreatePlane("background", {
+        
+        if (this.sun  !=  null)return
+        
+        var scene = getCurrentScene();
+        this.sun = BABYLON.Mesh.CreateSphere("SUN", 10, SIZE_OF_THE_SUN, scene);
+        this.sunB = BABYLON.MeshBuilder.CreatePlane("background", {
                 width: SIZE_OF_THE_SUN,
                 height: SIZE_OF_THE_SUN
             }, scene, true);
 
         //abstractMesh
-        sun.parent = this.mainNode;
-        background.parent = this.mainNode;
+        this.sun.parent = this.mainNode;
+        this.sunB.parent = this.mainNode;
 
-        sun.material = new BABYLON.StandardMaterial("sunmat", scene);
-        sun.material.specularColor = new BABYLON.Color3(0, 0, 0);
-        sun.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-        sun.material.emissiveColor = new BABYLON.Color3(0, 1, 1);
-        sun.position = new BABYLON.Vector3(0, 0, 0);
+        this.sun.material = new BABYLON.StandardMaterial("sunmat", scene);
+        this.sun.material.specularColor = new BABYLON.Color3(0, 0, 0);
+        this.sun.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+        this.sun.material.emissiveColor = new BABYLON.Color3(0, 1, 1);
+        this.sun.position = new BABYLON.Vector3(0, 0, 0);
 
-        background.alpha = 0;
-        background.material = new BABYLON.StandardMaterial("bck", scene);
-        background.position = new BABYLON.Vector3(0, SIZE_OF_THE_SUN / 2, 0);
+        this.sunB.alpha = 0;
+        this.sunB.material = new BABYLON.StandardMaterial("bck", scene);
+        this.sunB.position = new BABYLON.Vector3(0, SIZE_OF_THE_SUN / 2, 0);
 
-        background.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
-        background.material.diffuseTexture = new BABYLON.DynamicTexture("bck", 512, scene, false);
-        background.material.specularColor = new BABYLON.Color3(0, 0, 0);
-        background.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-        background.material.emissiveColor = new BABYLON.Color3(0, 1, 1);
+        this.sunB.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
+        this.sunB.material.diffuseTexture = new BABYLON.DynamicTexture("bck", 512, scene, false);
+        this.sunB.material.specularColor = new BABYLON.Color3(0, 0, 0);
+        this.sunB.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+        this.sunB.material.emissiveColor = new BABYLON.Color3(0, 1, 1);
 
-        background.material.diffuseTexture.drawText("SUN", 0, 200, "bold 200px Segoe UI", "white", "#555555");
+        this.sunB.material.diffuseTexture.drawText("SUN", 0, 200, "bold 200px Segoe UI", "white", "#555555");
 
     };
 
