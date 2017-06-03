@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html>
 
@@ -84,11 +86,18 @@
     <script src="js/fol_the_path.js"></script>
 
     <script type="text/javascript">
+        /*jslint browser:true */
+        /*global BABYLON */
+        /*global cameraOn*/
+        /*global RawData*/
+        /*global DiagramHR*/
+        /*global ConstellationsManager*/
+        /*global constructMenu*/
         var _scene = null;
-        var cube_stars = 1000000; // all stars will be inside a cube of cube_stars.
+        var cube_stars = 1000000; // all stars will be inside a cube of cube_stars. 
         var rotatecamera = false;
 
-        var SIZE_OF_THE_SUN = 2 // size of the sun.
+        var SIZE_OF_THE_SUN = 2; // size of the sun.
 
         //GLOBAL CLASS
         var RAW_DATA;
@@ -97,15 +106,14 @@
 
         var getCurrentScene = function() {
 
-            if (_scene != null) return _scene;
+            if (_scene !== null) return _scene;
 
             var canvas = document.querySelector("#renderCanvas");
             var engine = new BABYLON.Engine(canvas, true);
-            scene = new BABYLON.Scene(engine);
+            var scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color3(0, 0, 0);
 
-            //    scene.debugLayer.show();     
-
+          
             var camera1 = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
             camera1.setPosition(new BABYLON.Vector3(0, 1, 1));
             camera1.attachControl(canvas);
@@ -127,31 +135,29 @@
                 if (rotatecamera) {
                     scene.activeCamera.alpha += 0.01;
                 }
-
             });
 
             window.addEventListener("resize", function() {
                 engine.resize();
-            });
+            }); 
 
             canvas.addEventListener("click", function() {
 
-
                 var ti = document.getElementById("textinformation");
                 var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-                if (pickResult == null) {
+                if (pickResult === null) {
                     ti.innerHTML = "";
                     return;
                 }
-                if (pickResult.pickedMesh == null) {
+                if (pickResult.pickedMesh === null) {
                     ti.innerHTML = "";
                     return;
-                };
-                name = pickResult.pickedMesh.name;
+                }
+                var name = pickResult.pickedMesh.name;
                 if (!name.startsWith("SP")) {
                     ti.innerHTML = "";
                     return;
-                };
+                }
                 ti.innerHTML = CONSTELLATIONS.get(name.split(":")[2]).getHTMLInfo(name.split(":")[1]);
 
             });
@@ -180,18 +186,16 @@
                     var cst = CONSTELLATIONS.get(CONSTELLATIONS.currentCst);
                     ti.innerHTML = cst.fullname + " (" + cst.shortname + " " + cst.getStarsLength() + ')';
 
-                } else {
-                    var cur = CONSTELLATIONS.currentCst;
                 }
-
-
+                if(evt.keyCode == 65)
+                    CONSTELLATIONS.mainNode.rotation.x -= 0.1;
+                
+               console.log (CONSTELLATIONS.mainNode.rotation.x * (180/Math.PI));
 
             });
-
             _scene = scene;
             return scene;
-
-        }
+        };
 
         var query_string = null;
 
@@ -200,7 +204,7 @@
             // This function is anonymous, is executed immediately and 
             // the return value is assigned to QueryString!
 
-            if (query_string != null) return query_string;
+            if (query_string !== null) return query_string;
 
             query_string = {};
             var query = window.location.search.substring(1);
@@ -240,12 +244,11 @@
             CONSTELLATIONS.redrawAllWithOptions();
             cameraOn(CONSTELLATIONS.currentCst);
 
-
-            if (QueryString["const"] != null && QueryString["const"] in CONSTELLATIONS.getAll()) CONSTELLATIONS.currentCst = QueryString["const"];
-            if (QueryString["cam"] != null && QueryString["cam"] == "rotate") document.getElementById("buttoncamera").click();
-            if (QueryString["alone"] != null && QueryString["alone"] == "yes") document.getElementById("buttononeconst").click();
-            if (QueryString["autor"] != null && QueryString["autor"] == "yes") document.getElementById("buttonrotate").click();
-            if (QueryString["show"] != null && QueryString["show"] == "all") document.getElementById("buttonstars").click();
+            if (QueryString.const !== null && QueryString.const in CONSTELLATIONS.getAll()) CONSTELLATIONS.currentCst = QueryString["const"];
+            if (QueryString.cam !== null && QueryString.cam == "rotate") document.getElementById("buttoncamera").click();
+            if (QueryString.alone !== null && QueryString.alone == "yes") document.getElementById("buttononeconst").click();
+            if (QueryString.autor !== null && QueryString.autor == "yes") document.getElementById("buttonrotate").click();
+            if (QueryString.show !== null && QueryString.show == "all") document.getElementById("buttonstars").click();
 
 
             CONSTELLATIONS.redrawAllWithOptions();
@@ -253,7 +256,7 @@
 
 
 
-        }
+        };
 
     </script>
 </head>
@@ -272,15 +275,15 @@
         <button id="buttoncamera" class="dropbtn">Rotate Camera</button>
         <button id="buttonrotate" class="dropbtn" style="display: none;">AutoRotation(start/stop)</button>
 
-      
+
         <a class="dropbtn" href="https://github.com/melioratif/Constellations">help</a>
 
         <a class="dropbtn" href="https://melioratif.net">mélioratif.net</a>
 
     </div>
- 
- <canvas id="renderCanvas" ></canvas>
- <div id="textinformation" style="position:fixed; top:50px; left:60%; color:white"></div>
+
+    <canvas id="renderCanvas"></canvas>
+    <div id="textinformation" style="position:fixed; top:50px; left:60%; color:white"></div>
 
 </body>
 

@@ -1,13 +1,46 @@
-var constructMenu = function () {
+/*jshint loopfunc: true */
+/*global document*/
+/*global rotatecamera:true*/
+/*global CONSTELLATIONS*/
+/*global confirm*/
+/*global getCurrentScene*/
+/*global BABYLON*/
 
+
+var cameraOn = function (cstname) {
+    "use strict";
+    var stars = CONSTELLATIONS.get(cstname).getStatInfo(),
+        scene = getCurrentScene();
+ 
+    scene.activeCamera.setTarget(new BABYLON.Vector3(stars.farest_cst_star[h_x_rel] / 2, stars.farest_cst_star[h_y_rel] / 2, stars.farest_cst_star[h_z_rel] / 2));
+    
+
+    
+    if (scene.activeCamera.name === "ArcRotateCamera") {
+        
+        scene.activeCamera.setPosition(new BABYLON.Vector3(stars.farest_cst_star[h_dist_rel]*1.5 , 0, 0));
+    } else {
+        getCurrentScene().activeCamera.position = new BABYLON.Vector3(0, 0, 0);
+    }
+    for (var key in CONSTELLATIONS.getAll()) {
+        var cons = CONSTELLATIONS.get(key);
+        cons.resetConnexionColor();
+    }
+
+    CONSTELLATIONS.get(cstname).ConnexionToColor();
+    document.getElementById("renderCanvas").focus();
+    document.getElementById("viewDrop").classList.remove("show");
+};
+
+
+
+
+var constructMenu = function () {
+    'use strict';
     document.getElementById("buttonview").addEventListener("click", function () {
         document.getElementById("viewDrop").classList.toggle("show");
         document.getElementById("viewDrop").getElementsByTagName("input")[0].focus();
     }, false);
-
-
-    //<button id="buttonrotate"  class="dropbtn">Start Rotation</button>
-
     document.getElementById("buttonrotate").addEventListener("click", function () {
         rotatecamera = !rotatecamera;
 
@@ -17,7 +50,9 @@ var constructMenu = function () {
 
     document.getElementById("buttonstars").addEventListener("click", function () {
         if (document.getElementById("buttonstars").textContent === "Show All Stars") {
-            if (CONSTELLATIONS.oneConstellationMode == false && !confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) return;
+            if (CONSTELLATIONS.oneConstellationMode === false && !confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) {
+                return;
+            }
             document.getElementById("buttonstars").textContent = "Hide All Stars";
             CONSTELLATIONS.showAllStars = true;
         } else {
@@ -32,29 +67,36 @@ var constructMenu = function () {
     document.getElementById("buttononeconst").addEventListener("click", function () {
 
         if (document.getElementById("buttononeconst").textContent === "Show current Constellation") {
-            if (CONSTELLATIONS.showAllStars)
-                if (!confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) return;
-            document.getElementById("buttononeconst").textContent = "Set All Constellation"
+            if (CONSTELLATIONS.showAllStars) {
+                if (!confirm('Warning, ShowAll mode. Are you shure you want to show all stars ?')) {
+                    return;
+                }
+            }
+            document.getElementById("buttononeconst").textContent = "Set All Constellation";
             CONSTELLATIONS.oneConstellationMode = true;
             cameraOn(CONSTELLATIONS.currentCst);
+            
+            
         } else {
-            document.getElementById("buttononeconst").textContent = "Show current Constellation"
+            document.getElementById("buttononeconst").textContent = "Show current Constellation";
             CONSTELLATIONS.oneConstellationMode = false;
         }
         CONSTELLATIONS.redrawAllWithOptions();
+           
+        
     }, false);
 
     document.getElementById("buttoncamera").addEventListener("click", function () {
 
         if (document.getElementById("buttoncamera").textContent === "Free Camera") {
             getCurrentScene().setActiveCameraByName("FreeCamera");
-            document.getElementById("buttoncamera").textContent = "Rotate Camera"
+            document.getElementById("buttoncamera").textContent = "Rotate Camera";
             document.getElementById("buttonrotate").style.display = "none";
             rotatecamera = false;
         } else {
             getCurrentScene().setActiveCameraByName("ArcRotateCamera");
             cameraOn(CONSTELLATIONS.currentCst);
-            document.getElementById("buttoncamera").textContent = "Free Camera"
+            document.getElementById("buttoncamera").textContent = "Free Camera";
             document.getElementById("buttonrotate").style.display = "";
         }
     }, false);
@@ -65,8 +107,8 @@ var constructMenu = function () {
             getCurrentScene().activeCamera.setPosition(new BABYLON.Vector3(0, 0, 0));
         } else {
             getCurrentScene().activeCamera.position = new BABYLON.Vector3(0, 0, 0);
-            stars = CONSTELLATIONS.get(CONSTELLATIONS.currentCst).getStatInfo();
-            getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"] / 2, stars["mid_y"] / 2, stars["mid_z"] / 2));
+            var stars = CONSTELLATIONS.get(CONSTELLATIONS.currentCst).getStatInfo();
+            getCurrentScene().activeCamera.setTarget(new BABYLON.Vector3(stars.farest_cst_star[h_x_rel] / 2, stars.farest_cst_star[h_y_rel] / 2, stars.farest_cst_star[h_z_rel] / 2));
         }
         document.getElementById("renderCanvas").focus();
     }, false);
@@ -77,7 +119,7 @@ var constructMenu = function () {
     });
 
     var short = [];
-    for (key in CONSTELLATIONS.getAll()) {
+    for (var key in CONSTELLATIONS.getAll()) {
         short.push(key);
     }
     short = short.sort(function (a, b) {
@@ -85,7 +127,7 @@ var constructMenu = function () {
     });
 
     var mydropdwn = document.getElementById("viewDrop");
-    for (i in short) {
+    for (var i in short) {
         var constel = CONSTELLATIONS.get(short[i]);
         var divelem = document.createElement("div");
         mydropdwn.appendChild(divelem);
@@ -114,7 +156,7 @@ var constructMenu = function () {
     canvas.addEventListener("click", function () {
         document.getElementById("viewDrop").classList.remove("show");
     });
-}
+};
 
 function filterFunction(idm, inputid) {
     var input = document.getElementById(inputid);
@@ -133,25 +175,4 @@ function filterFunction(idm, inputid) {
         }
     }
 
-}
-
-
-var cameraOn = function (cstname) {
-    stars = CONSTELLATIONS.get(cstname).getStatInfo();
-    var scene = getCurrentScene();
-
-    scene.activeCamera.setTarget(new BABYLON.Vector3(stars["mid_x"] / 2, stars["mid_y"] / 2, stars["mid_z"] / 2));
-    if (scene.activeCamera.name == "ArcRotateCamera") {
-        scene.activeCamera.setPosition(new BABYLON.Vector3(stars["max_dist"] / 2, 0, 0));
-    } else {
-        getCurrentScene().activeCamera.position = new BABYLON.Vector3(0, 0, 0);
-    }
-    for (key in CONSTELLATIONS.getAll()) {
-        var cons = CONSTELLATIONS.get(key);
-        cons.resetConnexionColor();
-    }
-
-    CONSTELLATIONS.get(cstname).ConnexionToColor();
-    document.getElementById("renderCanvas").focus();
-    document.getElementById("viewDrop").classList.remove("show");
 }
