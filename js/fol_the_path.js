@@ -1,5 +1,5 @@
 var fo_t_path = [
-//['Cru','La Croix du Sud',62434,59747],mistake here ..???
+    ['Cru', 'La Croix du Sud',62434,59747],
     ['Cru', 'La Croix du Sud', 60718, 61084],
     ['Com', 'La Chevelure de Bérénice', 64241, 64394, 60742],
     ['Lib', 'La Balance', 78207, 77853, 77060, 76333, 74785, 72622, 73714, 76470, 76600],

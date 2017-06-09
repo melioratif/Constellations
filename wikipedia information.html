@@ -14,7 +14,7 @@
         uniq = {};
         for (var i = 0; i < fo_t_path.length;i++)
         {
-            uniq[fo_t_path[i][0]] = fo_t_path[i][1].replace(/\W/gi,'_');
+            uniq[fo_t_path[i][0]] = fo_t_path[i][1]
         }
         /*
         
@@ -28,8 +28,9 @@ fi
             { 
                 console.log(sorted[q]);
               
-                name = sorted[q]+"_"+uniq[sorted[q]]+"_CONSTELLATION_3D.mkv";
-                str+= "if [ ! -f "+name+" ]; then osascript -e 'tell application \"Safari\" to open location \"file:///Users/elekis/Desktop/Github/Constellations/index.html\?const="+sorted[q]+"&alone=yes&cam=rotate&autor=yes\"' && sleep 15 && ffmpeg -video_size 2560x1600 -framerate 60 -f avfoundation -i \"1\" -t 00:00:30  -filter:v \"crop=in_w:in_h-330:0:300\" "+name+" && osascript -e 'tell application \"Safari\" to close (tabs of window 1 whose name = \"CONSTELLATION 3D\")' && sleep 3; fi<br>"
+                name = sorted[q]+" "+uniq[sorted[q]]+" CONSTELLATION 3D";
+                desc =
+                
             }
         
         document.write(str);
